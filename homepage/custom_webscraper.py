@@ -162,8 +162,8 @@ def go_kino_scraper():
     pattern1 = re.compile(r'\d{2}|\d{3}')
     options = Options()
     options.headless = True
-    driver = webdriver.Firefox(options=options,
-                               executable_path=r'C:\Users\gora-pc\AppData\Local\Programs\Python\Python38-32\Scripts\geckodriver.exe')
+    driver = webdriver.Firefox(options=options)
+                               #executable_path=r'C:\Users\gora-pc\AppData\Local\Programs\Python\Python38-32\Scripts\geckodriver.exe')
     session = HTMLSession()
     url = "https://gokino.pl/olawa/repertuar/"
     driver.get(url)
