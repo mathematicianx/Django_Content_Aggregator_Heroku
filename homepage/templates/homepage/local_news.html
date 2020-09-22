@@ -1,0 +1,37 @@
+{% extends "homepage/base.html" %}
+
+{% block title %}moj blog{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-6-center">
+            <h2>Olawa24 news</h2>
+            <hr>
+        </div>
+        <div class="col-6-center">
+            <h2>TuOława news</h2>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+                {% for news in olawa24_news %}
+                    <p class="title-news"><a href={{ news.link }}>{{ news.title }}</a></p>
+                    <p class="container-date">{{ news.date_of_publication }}</a></p>
+                    <hr align="bottom">
+                {% endfor %}
+        </div>
+        <div class="col-6">
+            {% for news in tuolawa_news %}
+                <p class="title-news"><a href={{ news.link }}>{{ news.title }}</a></p>
+                <p class="container-date">{{ news.date_of_publication }}</a></p>
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+

@@ -1,0 +1,23 @@
+{% extends "homepage/base.html" %}
+{% block title %}Edycja konta{% endblock %}
+{% load thumbnail %}
+{% load l10n %}
+
+
+{% block content %}
+     <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <p>Edycja konta</p>
+                    <p>Ustawienia możesz zmienić za pomocą poniższego formularza:</p>
+                    <form action="." method="post" enctype="multipart/form-data">
+                        {{ user_form.as_p }}
+                        {{ profile_form.as_p }}
+                        {% csrf_token %}
+                        <p><input type="submit" value="Zapisz zmiany"></p>
+                    </form>
+                </div>
+            </div>
+    </div>
+{% endblock %}
+

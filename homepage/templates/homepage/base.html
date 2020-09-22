@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl-PL">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link href="{% static "css/homepage.css" %}" type='text/css' rel="stylesheet">
+    <link rel="shortcut icon" href="#" />
+    {% block mce %}
+    {% endblock %}
+</head>
+<body>
+    <div class="top_logo">
+        <img src="{% static "images/top_logo.png" %}">
+    </div>
+    <div class="topnav">
+        <div class="topnav-main">
+            <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    <a class="active" href="{% url "homepage:index" %}">Główna</a>
+                    <a href="{% url "homepage:local_news" %}">Wiadomości Lokalne</a>
+                    <a href="{% url "homepage:all_cityhall_news" %}">Wiadomości z Urzędu Miasta</a>
+                    <a href="{% url "homepage:show_all_ads" %}">Ogłoszenia lokalne</a>
+                    <a href="{% url "homepage:new_ad" %}">Dodaj ogłoszenie</a>
+                    <a href="{% url "homepage:forum" %}">Forum dyskusyjne</a>
+                </div>
+            </div>
+        </div>
+        <div class="topnav-secondary">
+            <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    {% if request.user.is_authenticated %}
+                        {% if section == "dashboard" %}class="selected"{% endif %}
+                            <a href="{% url "homepage:password_change" %}">Zmień hasło</a>
+                            <a href="{% url "homepage:edit" %}">Edytuj profil</a>
+                            <a href="{% url "homepage:logout" %}">Wyloguj</a>
+                    {% else %}
+                        <a href="{% url "homepage:login" %}">Zaloguj</a>
+                        <a href="{% url "homepage:register" %}">Utwórz konto</a>
+                        <a href="{% url "homepage:password_reset" %}">Zapomniałeś hasła?</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+            {% block content %}
+            {% endblock %}
+            {% block premieres %}
+            {% endblock %}
+            {% block cityhall_news %}
+            {% endblock %}
+    </div>
+    <div class="footer">
+        stopka
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</body>
+</html>

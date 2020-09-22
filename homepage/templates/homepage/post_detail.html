@@ -1,0 +1,62 @@
+{% extends "homepage/base.html" %}
+{% block title %}{{ post_topic.title }}{% endblock %}
+{% load thumbnail %}
+{% load l10n %}
+
+{% block mce %}
+    {{ new_response_form.media }}
+{% endblock %}
+
+
+{% block content %}
+     <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <p style="font-size: 25px" align="center">{{ post_topic.title }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3-forum-user">
+                <div class="col-12-center">
+                    <p>{{ post_topic.author }}</p>
+                    <p>
+                    {% if post_topic.author.profile.thumbnail %}
+                        <img src="{{ post_topic.author.profile.thumbnail.url }}">
+                    {% endif %}
+                    </p>
+                    <p>Liczba postów: {{ post_topic.author.profile.post_count }}</p>
+                </div>
+            </div>
+            <div class="col-9">
+                <p>Dodano: {% localize on %}{{ post_topic.date_of_publication}}{% endlocalize %}</p>
+            </div>
+        </div>
+        <div class="row">
+                {% if post_responses %}
+                    {% for post_r in post_responses %}
+                    <div class="col-3-forum-user">
+                        <div class="col-12-center">
+                            <p>{{ post_r.author }}</p>
+                            <p>
+                            {% if post_r.author.profile.thumbnail %}
+                                <img src="{{ post_r.author.profile.thumbnail.url }}">
+                            {% endif %}
+                            <p>Liczba postów: {{ post_r.author.profile.post_count }}</p>
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <p>Dodano: {% localize on %}{{ post_r.date_of_publication}}{% endlocalize %}</p>
+                        <p>{{ post_r.body|safe }}</p>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            <div class="col-12-center">
+                <form action="." method="post" enctype="multipart/form-data">
+                    {{ new_response_form.as_p}}
+                    {% csrf_token %}
+                    <input type="submit" value="Dodaj post">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "homepage/base.html" %}
+{% block title %}{{ ad.title }}{% endblock %}
+{% load thumbnail %}
+{% load l10n %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+                <div class="col-12-center">
+                    <p style="font-size: 25px" align="center">{{ ad.title }}</p>
+                    <hr>
+                </div>
+                <div class="col-12-no-brdr">
+                    <p>Autor ogłoszenia: {{ ad.author }} Dodano: {% localize on %}{{ ad.date_of_publication}}{% endlocalize %}</p>
+                    <p>Cena: {{ ad.price }} zł</p>
+                    <hr>
+                </div>
+                <div class="col-12-no-brdr">
+                    <div>{{ ad.body|safe }} <!----------------SAFETY ISSUE ----------------------------------------></div>
+                    <div class="col-12-center">
+                        {% if ad.image %}
+                        <img src="{{ ad.resized_photo.url }}">
+                        {% endif %}
+                    </div>
+                </div>
+        </div>
+    </div>
+{% endblock %}
+

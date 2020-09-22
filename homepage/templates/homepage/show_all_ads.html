@@ -1,0 +1,35 @@
+{% extends "homepage/base.html" %}
+{% block title %}Aktualne ogłoszenia{% endblock %}
+{% load thumbnail %}
+{% load static %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="col-12-center">
+                <h2>{{ all_ads.count }} aktualnych ogłoszeń</h2>
+            </div>
+            <hr>
+            {% for ad in all_ads %}
+                <div class="row">
+                    <div class="col-3">
+                        {% if ad.image %}
+                            <img src="{{ ad.thumbnail.url }}">
+                        {% else %}
+                            <img src="{% static "images/default.png" %}">
+                        {% endif %}
+                    </div>
+                    <div class="col-9">
+                        <div class="single_add__title"><a href="{{ ad.get_absolute_url }}">{{ ad.title }}</a></div>
+                        <div class="single_add__date">{{ ad.date_of_publication}} przez {{ ad.author }}</div>
+                    </div>
+               </div>
+<!--               <hr>-->
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,84 @@
+{% extends "homepage/base.html" %}
+
+{% block title %}Oława{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <div class="col-12-center">
+                <h2>Oława24.pl</h2>
+                <p>10 najświeższych wiadomości zawsze pod ręką</p>
+            </div>
+            <hr>
+                {% for news in olawa24_news %}
+                    <p class="date_cont" style="font-size:10px">{{ news.date_of_publication }}</a></p>
+                    <p class="date_cont" style="font-size:15px"><a href={{ news.link }}>{{ news.title }}</a></p>
+                {% endfor %}
+        </div>
+        <div class="col-6">
+            <div class="col-12-center">
+                <h2>TuOława.pl</h2>
+                <p>10 najświeższych wiadomości zawsze pod ręką</p>
+            </div>
+            <hr>
+            {% for news in tuolawa_news %}
+                  <p class="date_cont" style="font-size:10px">{{ news.date_of_publication }}</a></p>
+                  <p class="date_cont" style="font-size:15px"><a href={{ news.link }}>{{ news.title }}</a></p>
+          {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block premieres %}
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <div class="col-12-center">
+                <h2>Kino Odra</h2>
+                <p>Premiery filmowe dzisiaj:</p>
+            </div>
+            <hr>
+            {% for key, value in kino_odra_movies.items %}
+                <p class="date_cont" style="font-size:15px"><a href={{ key.link }}>{{ key.title }}</a>. Ocena na Filmweb: <strong>{{ key.filmweb_score|floatformat:1 }}</strong></p>
+                <p class="date_cont">Godzina spektakli:
+                {% for v in value %}
+                    {{ v }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+                </p>
+            {% endfor %}
+        </div>
+        <div class="col-6">
+            <div class="col-12-center">
+                <h2>GO!Kino</h2>
+                <p>Premiery filmowe dzisiaj:</p>
+            </div>
+            <hr>
+            {% for key, value in gokino_movies.items %}
+            <p class="date_cont" style="font-size:15px"><a href={{ key.link }}>{{ key.title }}</a>. Ocena na Filmweb: <strong>{{ key.filmweb_score|floatformat:1 }}</strong></p>
+                <p class="date_cont">Godzina spektakli:
+                {% for v in value %}
+                    {{ v }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block cityhall_news %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="col-12-center"><h2>Urząd Miasta Oława</h2></div>
+            <hr>
+            {% for news in umolawa_news %}
+              <p class="date_cont" style="font-size:15px"><a href={{ news.link }}>{{ news.title }}</a></p>
+              <p class="date_cont">Opublikowano: {{ news.date_of_publication }}</p>
+              <p>{{ news.content|truncatewords:25 }}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

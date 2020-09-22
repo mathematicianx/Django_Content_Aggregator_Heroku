@@ -1,0 +1,29 @@
+{% extends "homepage/base.html" %}
+{% block title %}moj blog{% endblock %}
+{% load thumbnail %}
+
+{% block mce %}
+    {{ ad_form.media }}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+      <div class="col-12">
+        {% if new_ad %}
+            <h4>Twoje ogłoszenie zostało dodane</h4>
+        {% else %}
+            <form action="." method="post" enctype="multipart/form-data">
+                {{ ad_form.as_p }}
+                {% csrf_token %}
+                <div class="col-12-center">
+                <p><input type="submit" value="Dodaj Ogłoszenie"></p>
+                </div>
+            </form>
+        {% endif %}
+      </div>
+  </div>
+</div>
+
+{% endblock %}
+
