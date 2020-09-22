@@ -130,7 +130,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-LOGIN_REDIRECT_URL = 'homepage:dashboard'
+LOGIN_REDIRECT_URL = 'homepage:forum'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 THUMBNAIL_DEBUG = True
