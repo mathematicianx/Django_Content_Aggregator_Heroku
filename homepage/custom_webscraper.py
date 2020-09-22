@@ -6,6 +6,7 @@ import re
 from selenium.webdriver.firefox.options import Options
 from requests_html import HTMLSession
 from filmweb.filmweb import Filmweb
+import os
 
 def olawa24_scraper():
     """
@@ -162,12 +163,21 @@ def go_kino_scraper():
     pattern1 = re.compile(r'\d{2}|\d{3}')
     options = Options()
     options.headless = True
-    driver = webdriver.Firefox(options=options)
+    #driver = webdriver.Firefox(options=options)
                                #executable_path=r'C:\Users\gora-pc\AppData\Local\Programs\Python\Python38-32\Scripts\geckodriver.exe')
+
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+
+
     session = HTMLSession()
     url = "https://gokino.pl/olawa/repertuar/"
-    driver.get(url)
-    html = driver.page_source
+    chrome_driver.get(url)
+    html = chrome_driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
     results = soup.find_all('div', class_='item ng-scope')
     returned_dict = {}
@@ -192,7 +202,7 @@ def go_kino_scraper():
                                 'duration': duration,
                                 'time_of_spectacles': time_of_spectacles,
                                 'filmweb_score': filmweb_score}
-    driver.close()
+    chrome_driver.close()
     return returned_dict
 
 
