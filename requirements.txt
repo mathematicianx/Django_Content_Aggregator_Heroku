@@ -24,7 +24,10 @@ lxml==4.5.2
 parse==1.18.0
 Pillow==7.2.0
 pipenv==2020.8.13
+postgres==3.0.0
 psycopg2==2.8.6
+psycopg2-binary==2.8.6
+psycopg2-pool==1.1
 pycparser==2.20
 pyee==7.0.3
 pyfilmweb==0.1.1.2

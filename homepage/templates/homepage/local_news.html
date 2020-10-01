@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-6">
                 {% for news in olawa24_news %}
-                    <p class="title-news"><a href={{ news.link }}>{{ news.title }}</a></p>
+                    <p class="title-news"><a href={{ news.link }}>{{ news.title|truncatechars:65 }}</a></p>
                     <p class="container-date">{{ news.date_of_publication }}</a></p>
                     <hr align="bottom">
                 {% endfor %}

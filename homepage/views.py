@@ -7,8 +7,7 @@ from .forms import SimpleAdForm, LoginForm, UserRegistrationForm, UserEditForm, 
 import sys
 # sys.path.append(r"C:\Users\gora-pc\PycharmProjects\web_scraping\tkinter_gui")
 from .custom_webscraper import olawa24_scraper, tuolawa_scraper, kino_odra_scraper, go_kino_scraper, um_olawa_scraper
-from datetime import datetime
-
+from django.utils import timezone
 
 
 def index(request):
@@ -63,7 +62,7 @@ def index(request):
                     single_time_of_spectacle.save()
 
 
-    kino_odra_movies = Movie.objects.filter(which_site='kino_odra').filter(day_of_spectacle=datetime.now().replace(hour=0, minute=0, second=0, microsecond=0))
+    kino_odra_movies = Movie.objects.filter(which_site='kino_odra').filter(day_of_spectacle=timezone.now().replace(hour=0, minute=0, second=0, microsecond=0))
     kino_odra_spectacles = {}
     for one_movie in kino_odra_movies:
         dates2 = []
@@ -96,7 +95,7 @@ def index(request):
                     single_time_of_spectacle.date = single_time
                     single_time_of_spectacle.save()
 
-    gokino_movies = Movie.objects.filter(which_site='gokino').filter(day_of_spectacle=datetime.now().replace(hour=0, minute=0, second=0, microsecond=0))
+    gokino_movies = Movie.objects.filter(which_site='gokino').filter(day_of_spectacle=timezone.now().replace(hour=0, minute=0, second=0, microsecond=0))
     gokino_spectacles = {}
     for one_movie in gokino_movies:
         dates1 = []
@@ -266,8 +265,8 @@ def post_detail(request, id, slug):
                                                          'new_response_form': new_response_form})
 
 def local_news(request):
-    olawa24_news = News.objects.filter(which_site='olawa24').order_by('-id')
-    tuolawa_news = News.objects.filter(which_site='tuolawa').order_by('-id')
+    olawa24_news = News.objects.filter(which_site='olawa24').order_by('-date_of_publication')
+    tuolawa_news = News.objects.filter(which_site='tuolawa').order_by('-date_of_publication')
 
     return render(request, 'homepage/local_news.html', {'olawa24_news': olawa24_news,
                                                         'tuolawa_news': tuolawa_news})

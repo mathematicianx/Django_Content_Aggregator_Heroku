@@ -7,6 +7,7 @@ from selenium.webdriver.firefox.options import Options
 from requests_html import HTMLSession
 from filmweb.filmweb import Filmweb
 import os
+from django.utils import timezone
 
 def olawa24_scraper():
     """
@@ -138,7 +139,7 @@ def kino_odra_scraper():
         for one_tmp_time in tmp_time_of_spctcl:
             hours = int(one_tmp_time.text[:2])
             minutes = int(one_tmp_time.text[3:])
-            x = datetime.today().replace(hour=hours, minute=minutes, second=0, microsecond=0)
+            x = timezone.now().replace(hour=hours, minute=minutes, second=0, microsecond=0)
             time_of_spectacles.append(x)
         returned_dict[title] = {
             'link': link,
@@ -163,21 +164,21 @@ def go_kino_scraper():
     pattern1 = re.compile(r'\d{2}|\d{3}')
     options = Options()
     options.headless = True
-    #driver = webdriver.Firefox(options=options)
+    driver = webdriver.Firefox(options=options)
                                #executable_path=r'C:\Users\gora-pc\AppData\Local\Programs\Python\Python38-32\Scripts\geckodriver.exe')
 
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+    # chrome_options = webdriver.ChromeOptions()
+    # chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--disable-dev-shm-usage")
+    # chrome_options.add_argument("--no-sandbox")
+    # driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
 
     session = HTMLSession()
     url = "https://gokino.pl/olawa/repertuar/"
-    chrome_driver.get(url)
-    html = chrome_driver.page_source
+    driver.get(url)
+    html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
     results = soup.find_all('div', class_='item ng-scope')
     returned_dict = {}
@@ -196,13 +197,13 @@ def go_kino_scraper():
         for spec in spectacles:
             hours = int(spec.text.lstrip('\n').rstrip()[:2])
             minutes = int(spec.text.lstrip('\n').rstrip()[3:])
-            x = datetime.today().replace(hour=hours, minute=minutes, second=0, microsecond=0)  # converting to datetime
+            x = timezone.now().replace(hour=hours, minute=minutes, second=0, microsecond=0)
             time_of_spectacles.append(x)
         returned_dict[title] = {'link': link,
                                 'duration': duration,
                                 'time_of_spectacles': time_of_spectacles,
                                 'filmweb_score': filmweb_score}
-    chrome_driver.close()
+    driver.close()
     return returned_dict
 
 
