@@ -13,8 +13,8 @@
             </div>
             <hr>
                 {% for news in olawa24_news %}
-                    <p class="date_cont" style="font-size:10px">{{ news.date_of_publication }}</a></p>
-                    <p class="date_cont" style="font-size:15px"><a href={{ news.link }}>{{ news.title }}</a></p>
+                    <p class="container-date" style="font-size:10px">{{ news.date_of_publication }}</a></p>
+                    <p class="title-news" style="font-size:15px"><a href={{ news.link }}>{{ news.title|truncatechars:65  }}</a></p>
                 {% endfor %}
         </div>
         <div class="col-6">
@@ -24,8 +24,8 @@
             </div>
             <hr>
             {% for news in tuolawa_news %}
-                  <p class="date_cont" style="font-size:10px">{{ news.date_of_publication }}</a></p>
-                  <p class="date_cont" style="font-size:15px"><a href={{ news.link }}>{{ news.title }}</a></p>
+                  <p class="container-date" style="font-size:10px">{{ news.date_of_publication }}</a></p>
+                  <p class="title-news" style="font-size:15px"><a href={{ news.link }}>{{ news.title|truncatechars:65  }}</a></p>
           {% endfor %}
         </div>
     </div>

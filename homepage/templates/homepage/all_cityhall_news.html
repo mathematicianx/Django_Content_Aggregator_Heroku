@@ -6,17 +6,19 @@
 {% block premieres %}
 <div class="container">
     <div class="row">
-        <div class="col-12-center">
-            <h2>Urząd Miasta</h2>
-            <hr>
-        </div>
         <div class="col-12">
-            {% for news in umolawa_news %}
-                <h6><a href={{ news.link }}>{{ news.title }}</a></h6>
-                <p class="container-date">Opublikowano: {{ news.date_of_publication }}</p>
-                <p>{{ news.content|truncatewords:25 }}</p>
+            <div class="col-12-center">
+                <h2>Wiadomości z Urzędu Miasta Oława</h2>
                 <hr>
-            {% endfor %}
+            </div>
+            <div class="col-12-no-brdr">
+                {% for news in umolawa_news %}
+                    <h6><a href={{ news.link }}>{{ news.title }}</a></h6>
+                    <p class="container-date">Opublikowano: {{ news.date_of_publication }}</p>
+                    <p>{{ news.content|truncatewords:25 }}</p>
+                    <hr>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>

@@ -6,32 +6,30 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-6-center">
-            <h2>Olawa24 news</h2>
-            <hr>
-        </div>
-        <div class="col-6-center">
-            <h2>TuOława news</h2>
-            <hr>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-6">
-                {% for news in olawa24_news %}
-                    <p class="title-news"><a href={{ news.link }}>{{ news.title|truncatechars:65 }}</a></p>
-                    <p class="container-date">{{ news.date_of_publication }}</a></p>
-                    <hr align="bottom">
-                {% endfor %}
-        </div>
-        <div class="col-6">
-            {% for news in tuolawa_news %}
-                <p class="title-news"><a href={{ news.link }}>{{ news.title }}</a></p>
-                <p class="container-date">{{ news.date_of_publication }}</a></p>
+            <div class="col-12-center">
+                <h2>Oława24.pl</h2>
+                <p>Najświeższe wiadomości zawsze pod ręką</p>
                 <hr>
+            </div>
+            {% for news in olawa24_news %}
+                <p class="container-date">{{ news.date_of_publication }}</a></p>
+                <p class="title-news"><a href={{ news.link }}>{{ news.title|truncatechars:65 }}</a></p>
             {% endfor %}
         </div>
+        <div class="col-6">
+            <div class="col-12-center">
+                <h2>TuOława.pl</h2>
+                <p>Najświeższe wiadomości zawsze pod ręką</p>
+                <hr>
+            </div>
+            {% for news in tuolawa_news %}
+                <p class="container-date">{{ news.date_of_publication }}</a></p>
+                <p class="title-news"><a href={{ news.link }}>{{ news.title|truncatechars:65  }}</a></p>
+            {% endfor %}
+            </div>
+        </div>
     </div>
-
 </div>
 {% endblock %}
 

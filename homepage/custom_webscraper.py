@@ -164,15 +164,15 @@ def go_kino_scraper():
     pattern1 = re.compile(r'\d{2}|\d{3}')
     options = Options()
     options.headless = True
-    # driver = webdriver.Firefox(options=options)
-    #                            #executable_path=r'C:\Users\gora-pc\AppData\Local\Programs\Python\Python38-32\Scripts\geckodriver.exe')
+    driver = webdriver.Firefox(options=options)
+                               #executable_path=r'C:\Users\gora-pc\AppData\Local\Programs\Python\Python38-32\Scripts\geckodriver.exe')
 
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--no-sandbox")
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+    # chrome_options = webdriver.ChromeOptions()
+    # chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--disable-dev-shm-usage")
+    # chrome_options.add_argument("--no-sandbox")
+    # driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
 
     session = HTMLSession()
@@ -189,7 +189,10 @@ def go_kino_scraper():
         link = 'https://gokino.pl' + first_container.a['href']
         duration_bad_format = result.find('p', class_='ng-binding').text.split('\n')[0]
         # this returns long string separated with \n. 0 element is duration
-        duration = int(pattern1.search(duration_bad_format).group())
+        if pattern1.search(duration_bad_format) is not None:
+            duration = int(pattern1.search(duration_bad_format).group())
+        else:
+            duration = 0
         spectacles = second_container.find_all('div', class_='col-md-3 ng-scope')
         time_of_spectacles = []
         fw = Filmweb()
@@ -205,7 +208,7 @@ def go_kino_scraper():
                                 'filmweb_score': filmweb_score}
     driver.close()
     return returned_dict
-
+go_kino_scraper()
 
 def um_olawa_scraper():
     main_url = 'https://www.um.olawa.pl/?start='
@@ -219,14 +222,16 @@ def um_olawa_scraper():
         result_from_single_page = soup.find_all('div', class_='item column-1')
         for result in result_from_single_page:
             title = result.find(class_='page-header').h2.a.text.strip()
-            content = result.find(class_='intro-article').p.text
+            content = result.find(class_='intro-article')
+            if content.p is not None:
+                content = content.p.text
+            else:
+                content = 'Brak Zawartości'
             link = 'https://www.um.olawa.pl/' + result.find(class_='page-header').h2.a['href']
             raw_published_date = result.find('time')['datetime']
             overall_date = raw_published_date[0:10]
             detail_date = raw_published_date[11:19]
             published_date = datetime.strptime(overall_date + ' ' +detail_date, '%Y-%m-%d %H:%M:%S')
-            if content == '':
-                content = 'Brak zawartości'
             if title not in returned_dict:
                 returned_dict[title] = {'content': content,
                                         'link': link,
@@ -237,4 +242,3 @@ def um_olawa_scraper():
                                         'link': link,
                                         'published_date': published_date}
     return returned_dict
-

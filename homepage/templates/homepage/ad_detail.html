@@ -7,12 +7,14 @@
 {% block content %}
     <div class="container">
         <div class="row">
+            <div class="col-12">
                 <div class="col-12-center">
                     <p style="font-size: 25px" align="center">{{ ad.title }}</p>
                     <hr>
                 </div>
                 <div class="col-12-no-brdr">
-                    <p>Autor ogłoszenia: {{ ad.author }} Dodano: {% localize on %}{{ ad.date_of_publication}}{% endlocalize %}</p>
+                    <p>Autor ogłoszenia: <strong>{{ ad.author }}</strong></p>
+                    <p>Dodano: {% localize on %}{{ ad.date_of_publication}}{% endlocalize %}</p>
                     <p>Cena: {{ ad.price }} zł</p>
                     <hr>
                 </div>
@@ -24,6 +26,7 @@
                         {% endif %}
                     </div>
                 </div>
+            </div>
         </div>
     </div>
 {% endblock %}

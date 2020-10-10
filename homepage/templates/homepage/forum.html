@@ -9,21 +9,20 @@
     <div class="row">
         <div class="col-12-center">
             <h2> {{ all_topics.count }} gorących tematów do dyskusji</h2>
-        </div>
-        {% for topic in all_topics %}
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-9">
-                        <p class="title-news"><a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a></p>
-                        <p class="date-cont">{{ topic.date_of_publication}} przez {{ topic.author }}</p>
+            <div class="col-12-no-brdr">
+            {% for topic in all_topics %}
+                    <div class="row">
+                        <div class="col-9">
+                            <p class="title-news"><a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a></p>
+                            <p class="date-cont">{{ topic.date_of_publication}} przez {{ topic.author }}</p>
+                        </div>
+                        <div class="col-3">
+                            <p>Liczba postów: <strong>{{ topic.topic_count }}</strong></p>
+                            <p>Data publikacji ostatniego posta: <br>{{ topic.last_post_date }}</p>
+                        </div>
                     </div>
-                    <div class="col-3">
-                        <p>Liczba postów: <strong>{{ topic.topic_count }}</strong></p>
-                        <p>Data publikacji ostatniego posta: <br>{{ topic.last_post_date }}</p>
-                    </div>
-                </div>
+            {% endfor %}
             </div>
-        {% endfor %}
         </div>
     </div>
 </div>
