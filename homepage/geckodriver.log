@@ -154,3 +154,17 @@ console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Err
 1602319577560	Marionette	INFO	Listening on port 52955
 1602319577986	Marionette	WARN	TLS certificate errors will be ignored for this session
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+1602412766374	geckodriver	INFO	Listening on 127.0.0.1:53157
+1602412769386	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-headless" "-foreground" "-no-remote" "-profile" "C:\\Users\\gora-pc\\AppData\\Local\\Temp\\rust_mozprofile2kc2tD"
+*** You are running in headless mode.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1602412773316	Marionette	INFO	Listening on port 53183
+1602412773513	Marionette	WARN	TLS certificate errors will be ignored for this session
+1602412793357	geckodriver	INFO	Listening on 127.0.0.1:53289
+1602412796371	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-headless" "-foreground" "-no-remote" "-profile" "C:\\Users\\gora-pc\\AppData\\Local\\Temp\\rust_mozprofile4PQyLB"
+*** You are running in headless mode.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1602412800041	Marionette	INFO	Listening on port 53297
+1602412800490	Marionette	WARN	TLS certificate errors will be ignored for this session
