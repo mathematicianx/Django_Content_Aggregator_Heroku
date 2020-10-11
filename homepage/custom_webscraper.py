@@ -210,7 +210,7 @@ def go_kino_scraper():
                                 'filmweb_score': filmweb_score}
     driver.close()
     return returned_dict
-go_kino_scraper()
+
 
 def um_olawa_scraper():
     main_url = 'https://www.um.olawa.pl/?start='
