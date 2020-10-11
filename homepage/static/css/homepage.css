@@ -173,3 +173,12 @@ body {
     margin-bottom: 0px;
 
 }
+
+.col-3-foto-center {
+    width: 25%;
+    text-align: center;
+    align-items: center;
+    background-color: #F0F0F0;
+    border: 1px solid #686868;
+    margin-right: -2px;
+}
