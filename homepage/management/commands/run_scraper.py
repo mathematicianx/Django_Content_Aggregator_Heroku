@@ -31,6 +31,19 @@ class Command(BaseCommand):
                 news2.which_site = news2.STATUS_tuolawa
                 news2.save()
 
+        returned_dict5 = um_olawa_scraper()
+        for key in returned_dict5:
+            try:
+                news = News.objects.get(title=key, which_site='umolawa')
+            except Exception:
+                news = News()
+                news.title = key
+                news.link = returned_dict5[key]['link']
+                news.date_of_publication = returned_dict5[key]['published_date']
+                news.which_site = news.STATUS_umolawa
+                news.content = returned_dict5[key]['content']
+                news.save()
+
         returned_dict3 = kino_odra_scraper()
         for key in returned_dict3:
             compare_date = returned_dict3[key]['time_of_spectacles'][0].replace(hour=0, minute=0, second=0,
@@ -107,20 +120,9 @@ class Command(BaseCommand):
                 dates1.append(d.date.strftime('%H:%M'))
             gokino_spectacles[one_movie] = dates1
 
-        returned_dict5 = um_olawa_scraper()
-        for key in returned_dict5:
-            try:
-                news = News.objects.get(title=key, which_site='umolawa')
-            except Exception:
-                news = News()
-                news.title = key
-                news.link = returned_dict5[key]['link']
-                news.date_of_publication = returned_dict5[key]['published_date']
-                news.which_site = news.STATUS_umolawa
-                news.content = returned_dict5[key]['content']
-                news.save()
-        olawa24_news = News.objects.filter(which_site='olawa24').order_by('-date_of_publication')[:10]
-        tuolawa_news = News.objects.filter(which_site='tuolawa').order_by('-date_of_publication')[:10]
-        umolawa_news = News.objects.filter(which_site='umolawa').order_by('-date_of_publication')[:5]
+
+        # olawa24_news = News.objects.filter(which_site='olawa24').order_by('-date_of_publication')[:10]
+        # tuolawa_news = News.objects.filter(which_site='tuolawa').order_by('-date_of_publication')[:10]
+        # umolawa_news = News.objects.filter(which_site='umolawa').order_by('-date_of_publication')[:5]
 
         return "scraper finished"
