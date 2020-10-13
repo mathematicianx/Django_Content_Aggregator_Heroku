@@ -32,17 +32,18 @@ class Command(BaseCommand):
                 news2.save()
 
         returned_dict5 = um_olawa_scraper()
-        for key in returned_dict5:
+        for key3 in returned_dict5:
+            print(key3)
             try:
-                news = News.objects.get(title=key, which_site='umolawa')
+                news3 = News.objects.get(title=key3, which_site='umolawa', date_of_publication=returned_dict5[key3]['published_date'])
             except Exception:
-                news = News()
-                news.title = key
-                news.link = returned_dict5[key]['link']
-                news.date_of_publication = returned_dict5[key]['published_date']
-                news.which_site = news.STATUS_umolawa
-                news.content = returned_dict5[key]['content']
-                news.save()
+                news3 = News()
+                news3.title = key3
+                news3.link = returned_dict5[key3]['link']
+                news3.date_of_publication = returned_dict5[key3]['published_date']
+                news3.which_site = news3.STATUS_umolawa
+                news3.content = returned_dict5[key3]['content']
+                news3.save()
 
         returned_dict3 = kino_odra_scraper()
         for key in returned_dict3:

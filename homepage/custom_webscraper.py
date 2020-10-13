@@ -243,6 +243,5 @@ def um_olawa_scraper():
                 returned_dict[title] = {'content': content,
                                         'link': link,
                                         'published_date': published_date}
-    print(returned_dict)
     return returned_dict
 
