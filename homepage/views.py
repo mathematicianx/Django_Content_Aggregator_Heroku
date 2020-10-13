@@ -152,7 +152,7 @@ def post_detail(request, id, slug):
                                    id=id)
 
     try:
-        post_responses = ForumResponse.objects.select_related('author__profile').filter(topic=post_topic)
+        post_responses = ForumResponse.objects.select_related('author__profile').filter(topic=post_topic).order_by('-date_of_publication')
     except Exception:
         post_responses = ''
 
