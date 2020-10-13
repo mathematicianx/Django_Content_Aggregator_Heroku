@@ -33,7 +33,6 @@ class Command(BaseCommand):
 
         returned_dict5 = um_olawa_scraper()
         for key3 in returned_dict5:
-            print(key3)
             try:
                 news3 = News.objects.get(title=key3, which_site='umolawa', date_of_publication=returned_dict5[key3]['published_date'])
             except Exception:
