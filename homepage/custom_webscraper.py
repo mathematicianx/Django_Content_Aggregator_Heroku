@@ -163,12 +163,12 @@ def go_kino_scraper():
     """
     pattern1 = re.compile(r'\d{2}|\d{3}')
 
-    #
+
     # options = Options()
     # options.headless = True
     # driver = webdriver.Firefox(options=options)
     #                            #executable_path=r'C:\Users\gora-pc\AppData\Local\Programs\Python\Python38-32\Scripts\geckodriver.exe')
-
+    #
     chrome_options = webdriver.ChromeOptions()
     chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
     chrome_options.add_argument("--headless")
@@ -243,5 +243,6 @@ def um_olawa_scraper():
                 returned_dict[title] = {'content': content,
                                         'link': link,
                                         'published_date': published_date}
+    print(returned_dict)
     return returned_dict
 
