@@ -50,13 +50,19 @@
                     </div>
                     {% endfor %}
                 {% endif %}
-            <div class="col-12-center">
-                <form action="." method="post" enctype="multipart/form-data">
-                    {{ new_response_form.as_p}}
-                    {% csrf_token %}
-                    <input type="submit" value="Dodaj post">
-                </form>
-            </div>
+            {% if request.user.is_authenticated %}
+                <div class="col-12-center">
+                    <form action="." method="post" enctype="multipart/form-data">
+                        {{ new_response_form.as_p}}
+                        {% csrf_token %}
+                        <input type="submit" value="Dodaj post">
+                    </form>
+                </div>
+            {% else %}
+                <div class="col-12-center">
+                    <p>Zaloguj/Zarejestruj się, aby móc uczestniczyć w dyskusji</p>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
