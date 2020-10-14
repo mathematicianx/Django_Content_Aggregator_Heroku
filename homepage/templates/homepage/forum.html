@@ -11,7 +11,7 @@
             <h2> {{ all_topics.count }} gorących tematów do dyskusji</h2>
             <div class="col-12-no-brdr">
             {% for topic in all_topics %}
-                    <div class="row">
+                    <div class="row-forum">
                         <div class="col-9">
                             <p class="title-news"><a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a></p>
                             <p class="date-cont">{{ topic.date_of_publication}} przez {{ topic.author }}</p>

@@ -1,6 +1,6 @@
 /* Add a black background color to the top navigation */
 .topnav {
-  background-color: #333;
+  background-color: #2b3239;
   overflow: hidden;
 }
 
@@ -30,18 +30,19 @@
 
 /* Add a color to the active/current link */
 .topnav-main a.active {
-  background-color: #4CAF50;
+  background-color: #137bb5;
   color: white;
 }
 
 .top_logo {
     text-align: center;
+    background-color: #2b3239;
     }
 
 .footer {
     background-color: #333;
     text-align: center;
-    font-color: color: #f2f2f2;
+    color: white;
 }
 
 .single_add {
@@ -64,7 +65,7 @@
 
 
 body {
-  background-color: #DCDCDC;
+  background-color: #7c96a4;
 }
 
 .single_add__photo {
@@ -72,14 +73,14 @@ body {
     margin-left: auto;
     margin-right: auto;
     width: 50%;
-
+}
 
 .row-add {
     background-color: #A9A9A9;
     margin: 3px;
 }
 
-}
+
 .container {
     display: flex;
     flex-direction: column;
@@ -88,6 +89,12 @@ body {
 }
 
 .row {
+    width:100%;
+    display: flex;
+    padding: 2px;
+}
+
+.row-forum {
     width:100%;
     display: flex;
     padding: 2px;
@@ -171,14 +178,13 @@ body {
     font-style: italic;
     display: inline;
     margin-bottom: 0px;
-
 }
 
 }
 .title-news-movie {
     font-size: 14px;
     font-weight: bold;
-    margin-bottom: 0px
+    margin-bottom: 0px;
 }
 
 .col-3-foto-center {
