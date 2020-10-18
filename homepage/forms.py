@@ -67,6 +67,7 @@ class ProfileEditForm(forms.ModelForm):
 
 
 class CreateTopicForm(forms.ModelForm):
+    body = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}), label='Dodaj temat')
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
