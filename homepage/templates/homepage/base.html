@@ -47,6 +47,14 @@
             </div>
         </div>
     </div>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                {{ message|safe }}
+            {% endfor %}
+        </div>
+<!--    # TODO finish messages-->
+    {% endif %}
     <div class="main">
             {% block content %}
             {% endblock %}

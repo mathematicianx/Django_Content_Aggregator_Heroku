@@ -91,7 +91,6 @@ body {
 .row {
     width:100%;
     display: flex;
-    padding: 2px;
 }
 
 .row-forum {
@@ -102,27 +101,27 @@ body {
 
 .col-3 {
     width: 25%;
-    background-color: #F0F0F0;
+    background-color: #d3d9de;
     border: 1px solid #686868;
 }
 
 .col-6 {
     width: 50%;
-    background-color: #F0F0F0;
+    background-color: #d3d9de;
     border: 1px solid #686868;
     margin-right: -2px;
 }
 
 .col-9 {
     width: 75%;
-    background-color: #F0F0F0;
+    background-color: #d3d9de;
     border: 1px solid #686868;
     margin-left: -2px;
 }
 
 .col-12 {
     width: 100%;
-    background-color: #F0F0F0;
+    background-color: #d3d9de;
     border: 1px solid #686868;
 }
 
@@ -132,7 +131,7 @@ body {
     width: 25%;
     text-align: center;
     align-items: center;
-    background-color: #F0F0F0;
+    background-color: #d3d9de;
     border: 1px solid #686868;
     margin-right: -2px;
 }
@@ -140,18 +139,19 @@ body {
 .col-6-center {
     width: 50%;
     text-align: center;
-    background-color: #F0F0F0;
+    background-color: #d3d9de;
 }
 
 .col-9-center {
     width: 75%;
     text-align: center;
+    background-color: #d3d9de;
 }
 
 .col-12-center {
     width: 100%;
     text-align: center;
-    background-color: #F0F0F0;
+    background-color: #d3d9de;
 }
 
 .col-3-forum-user {
@@ -159,15 +159,23 @@ body {
     flex-direction: row;
     width: 25%;
     text-align: center;
-    background-color: #F0F0F0;
+    background-color: #d3d9de;
     border: 1px solid #686868;
     margin-right: -2px;
 }
 
 .col-12-no-brdr {
     width: 100%;
-    background-color: #F0F0F0;
+    background-color: #d3d9de;
+
 }
+
+.col-3-center-no-brdr {
+    width: 25%;
+    background-color: #d3d9de;
+    text-align: center;
+}
+
 .title-news {
     font-size: 15px;
     font-weight: bold;
@@ -191,7 +199,7 @@ body {
     width: 25%;
     text-align: center;
     align-items: center;
-    background-color: #F0F0F0;
+    background-color: #d3d9de;
     border: 1px solid #686868;
     margin-right: -2px;
 }

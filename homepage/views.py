@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import HttpResponse
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .models import News, Movie, MovieSpectacles, SimpleAd, Profile, ForumTopic, ForumResponse, User
 from .forms import SimpleAdForm, LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm, CreateTopicForm, CreateResponseForm
 from .custom_webscraper import olawa24_scraper, tuolawa_scraper, kino_odra_scraper, go_kino_scraper, um_olawa_scraper
 from django.utils import timezone
-
+from django.shortcuts import redirect
 
 def index(request):
     kino_odra_movies = Movie.objects.filter(which_site='kino_odra').filter(day_of_spectacle=timezone.now().replace(hour=0, minute=0, second=0, microsecond=0))
@@ -65,11 +66,14 @@ def user_login(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponse('Uwierzytelnienie zakończyło się sukcesem')
+                    messages.success(request, 'Uwierzytelnienie zakończyło się sukcesem')
+                    # return HttpResponse('Uwierzytelnienie zakończyło się sukcesem')
                 else:
-                    return HttpResponse('Konto jest zablokowane')
+                    messages.success(request, 'Konto jest zablokowane')
+                    # return HttpResponse('Konto jest zablokowane')
             else:
-                return HttpResponse('Nieprawidłowe dane uwierzytelniające')
+                messages.success(request, 'Nieprawidłowe dane uwierzytelniające')
+                # return HttpResponse('Nieprawidłowe dane uwierzytelniające')
     else:
         form = LoginForm()
     return render(request, 'homepage/login.html', {'form': form})
@@ -83,6 +87,7 @@ def register(request):
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
             profile = Profile.objects.create(user=new_user)
+            messages.success(request, 'Uwierzytelnienie zakończyło się sukcesem')
             return render(request,
                           'homepage/register_done.html',
                           {'new_user': new_user}
@@ -105,6 +110,7 @@ def new_ad(request):
             new_ad.author = request.user
             new_ad.save()
             ad_form = SimpleAdForm(user=request.user)
+            return redirect('homepage:show_all_ads')
     else:
         ad_form = SimpleAdForm(user=request.user)
     return render(request, 'homepage/new_ad.html', {'ad_form': ad_form,
@@ -132,15 +138,18 @@ def forum(request):
     all_topics = ForumTopic.objects.all().order_by('-id')
     return render(request, 'homepage/forum.html', {'all_topics': all_topics})
 
-
+@login_required
 def create_topic(request):
     if request.method == 'POST':
-        new_topic_form = CreateTopicForm(data=request.POST)
+        new_topic_form = CreateTopicForm(user=request.user, data=request.POST)
         if new_topic_form.is_valid():
-            new_topic = new_topic_form.save()
-            new_topic_form = CreateTopicForm()
+            new_topic = new_topic_form.save(commit=False)
+            new_topic.author = request.user
+            new_topic.save()
+            new_topic_form = CreateTopicForm(user=request.user)
+            return redirect('homepage:forum')
     else:
-        new_topic_form = CreateTopicForm()
+        new_topic_form = CreateTopicForm(user=request.user)
 
     return render(request,
                   'homepage/create_topic.html', {'new_topic_form': new_topic_form})
@@ -188,112 +197,3 @@ def all_cityhall_news(request):
     return render(request, 'homepage/all_cityhall_news.html', {'umolawa_news': umolawa_news})
 
 
-def save_data_from_scrapers():
-    returned_dict = olawa24_scraper()
-    for key in returned_dict:
-        try:
-            news = News.objects.get(title=key)
-        except Exception:
-            news = News()
-            news.title = key
-            news.link = returned_dict[key]['link']
-            news.date_of_publication = returned_dict[key]['date']
-            news.which_site = news.STATUS_olawa24
-            news.save()
-
-
-    returned_dict2 = tuolawa_scraper()
-    for key in returned_dict2:
-        try:
-            news2 = News.objects.get(title=key)
-        except Exception:
-            news2 = News()
-            news2.title = key
-            news2.link = returned_dict2[key]['link']
-            news2.date_of_publication = returned_dict2[key]['date']
-            news2.which_site = news2.STATUS_tuolawa
-            news2.save()
-
-
-    returned_dict3 = kino_odra_scraper()
-    for key in returned_dict3:
-        compare_date = returned_dict3[key]['time_of_spectacles'][0].replace(hour=0, minute=0, second=0, microsecond=0)
-        try:
-            movie1 = Movie.objects.get(title=key, which_site='kino_odra', day_of_spectacle=compare_date)
-        except:
-            movie1 = Movie()
-            movie1.title = key
-            movie1.link = returned_dict3[key]['link']
-            movie1.which_site = movie1.STATUS_kinoodra
-            movie1.duration = returned_dict3[key]['duration']
-            movie1.day_of_spectacle = returned_dict3[key]['time_of_spectacles'][0].replace(hour=0, minute=0, second=0, microsecond=0)
-            movie1.filmweb_score = returned_dict3[key]['filmweb_score']
-            movie1.save()
-            many_times = returned_dict3[key]['time_of_spectacles']
-            for single_time in many_times:
-                try:
-                    MovieSpectacles.objects.get(date=single_time, movie_name=Movie.objects.get(title=key, which_site='kino_odra', day_of_spectacle=compare_date))
-                except:
-                    single_time_of_spectacle = MovieSpectacles()
-                    single_time_of_spectacle.movie_name = Movie.objects.get(title=key, which_site='kino_odra', day_of_spectacle=compare_date)
-                    single_time_of_spectacle.date = single_time
-                    single_time_of_spectacle.save()
-
-
-    kino_odra_movies = Movie.objects.filter(which_site='kino_odra').filter(day_of_spectacle=timezone.now().replace(hour=0, minute=0, second=0, microsecond=0))
-    kino_odra_spectacles = {}
-    for one_movie in kino_odra_movies:
-        dates2 = []
-        for c in one_movie.all_spectacles.all():
-            dates2.append(c.date.strftime('%H:%M'))
-        kino_odra_spectacles[one_movie] = dates2
-
-
-    returned_dict4 = go_kino_scraper()
-    for key in returned_dict4:
-        compare_date = returned_dict4[key]['time_of_spectacles'][0].replace(hour=0, minute=0, second=0, microsecond=0)
-        try:
-            movie2 = Movie.objects.get(title=key, which_site='gokino', day_of_spectacle=compare_date)
-        except Exception:
-            movie2 = Movie()
-            movie2.title = key
-            movie2.link = returned_dict4[key]['link']
-            movie2.which_site = movie2.STATUS_gokino
-            movie2.duration = returned_dict4[key]['duration']
-            movie2.day_of_spectacle = returned_dict4[key]['time_of_spectacles'][0].replace(hour=0, minute=0, second=0, microsecond=0)
-            movie2.filmweb_score = returned_dict4[key]['filmweb_score']
-            movie2.save()
-            many_times = returned_dict4[key]['time_of_spectacles']
-            for single_time in many_times:
-                try:
-                    MovieSpectacles.objects.get(date=single_time, movie_name=Movie.objects.get(title=key, which_site='gokino', day_of_spectacle=compare_date))
-                except:
-                    single_time_of_spectacle = MovieSpectacles()
-                    single_time_of_spectacle.movie_name = Movie.objects.get(title=key, which_site='gokino', day_of_spectacle=compare_date)
-                    single_time_of_spectacle.date = single_time
-                    single_time_of_spectacle.save()
-
-    gokino_movies = Movie.objects.filter(which_site='gokino').filter(day_of_spectacle=timezone.now().replace(hour=0, minute=0, second=0, microsecond=0))
-    gokino_spectacles = {}
-    for one_movie in gokino_movies:
-        dates1 = []
-        for d in one_movie.all_spectacles.all():
-            dates1.append(d.date.strftime('%H:%M'))
-        gokino_spectacles[one_movie] = dates1
-
-
-    returned_dict5 = um_olawa_scraper()
-    for key in returned_dict5:
-        try:
-            news = News.objects.get(title=key, which_site='umolawa')
-        except Exception:
-            news = News()
-            news.title = key
-            news.link = returned_dict5[key]['link']
-            news.date_of_publication = returned_dict5[key]['published_date']
-            news.which_site = news.STATUS_umolawa
-            news.content = returned_dict5[key]['content']
-            news.save()
-    olawa24_news = News.objects.filter(which_site='olawa24').order_by('-date_of_publication')[:10]
-    tuolawa_news = News.objects.filter(which_site='tuolawa').order_by('-date_of_publication')[:10]
-    umolawa_news = News.objects.filter(which_site='umolawa').order_by('-date_of_publication')[:5]

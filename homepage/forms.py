@@ -67,12 +67,16 @@ class ProfileEditForm(forms.ModelForm):
 
 
 class CreateTopicForm(forms.ModelForm):
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(CreateTopicForm, self).__init__(*args, **kwargs)
+
     class Meta:
         model = ForumTopic
-        fields = ('title', 'author', 'body')
+        fields = ('title', 'body')
         labels = {
             'title': 'Temat posta',
-            'author': 'autor',
             'body': 'Treść posta',
         }
 
