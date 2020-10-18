@@ -14,4 +14,4 @@ Using forum and ads is free, but login is required.
 -whitenoise for serving static files,
 -TinyMCE for better input in forms,
 -FilmwebAPI written by lopezloo for movie score,
--thumbnail-SORL for handling images and scaling them for forum avatars and advert miniatures,
+-thumbnail-SORL for handling images and scaling them for forum avatars and advert miniatures, 
