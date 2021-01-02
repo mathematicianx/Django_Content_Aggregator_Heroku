@@ -125,7 +125,7 @@ class Profile(models.Model):
 
     date_of_birth = models.DateTimeField(blank=True, null=True)
     photo = models.ImageField(upload_to='uploads/',
-                                blank=True, default='default_photo.png')
+                                blank=True)
 
     @property
     def thumbnail(self):
