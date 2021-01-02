@@ -60,15 +60,19 @@
                 <p>Premiery filmowe dzisiaj:</p>
             </div>
             <hr>
-            {% for key, value in gokino_movies.items %}
-                <span class="title-news"><a href={{ key.link }}>{{ key.title|truncatechars:38 }}</a>.</span>
-                <span> Ocena na Filmweb: <strong>{{ key.filmweb_score|floatformat:1 }}</strong></span>
-                <p class="date_cont">Godzina spektakli:
-                {% for v in value %}
-                    {{ v }}{% if not loop.last %},{% endif %}
+            {% if gokino_movies.items %}
+                {% for key, value in gokino_movies.items %}
+                    <span class="title-news"><a href={{ key.link }}>{{ key.title|truncatechars:38 }}</a>.</span>
+                    <span> Ocena na Filmweb: <strong>{{ key.filmweb_score|floatformat:1 }}</strong></span>
+                    <p class="date_cont">Godzina spektakli:
+                    {% for v in value %}
+                        {{ v }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                    </p>
                 {% endfor %}
-                </p>
-            {% endfor %}
+            {% else %}
+                <p>Niestety nie ma w dniu dzisiejszym premier filmowych w GO! Kinie. Zapraszamy jutro!</p>
+            {% endif %}
         </div>
     </div>
 </div>
