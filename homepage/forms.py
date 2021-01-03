@@ -1,7 +1,8 @@
-from .models import SimpleAd, Profile, ForumTopic, ForumResponse
 from django import forms
 from django.contrib.auth.models import User
+from .models import SimpleAd, Profile, ForumTopic, ForumResponse
 from tinymce.widgets import TinyMCE
+
 
 class SimpleAdForm(forms.ModelForm):
     body = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}), label='Treść ogłoszenia')
@@ -89,12 +90,9 @@ class CreateResponseForm(forms.ModelForm):
         self.user = user
         super(CreateResponseForm, self).__init__(*args, **kwargs)
 
-
     class Meta:
         model = ForumResponse
         fields = ('body',)
         labels = {
             'body': 'Treść posta',
         }
-
-

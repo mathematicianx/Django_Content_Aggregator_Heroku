@@ -1,13 +1,14 @@
-from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
-from selenium import webdriver
 from datetime import datetime, timedelta
-import re
+from django.utils import timezone
+from filmweb.filmweb import Filmweb
+from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from requests_html import HTMLSession
-from filmweb.filmweb import Filmweb
+from urllib.request import Request, urlopen
 import os
-from django.utils import timezone
+import re
+
 
 def olawa24_scraper():
     """
@@ -163,7 +164,6 @@ def go_kino_scraper():
     """
     pattern1 = re.compile(r'\d{2}|\d{3}')
 
-
     # options = Options()
     # options.headless = True
     # driver = webdriver.Firefox(options=options)
@@ -175,7 +175,6 @@ def go_kino_scraper():
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--no-sandbox")
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-
 
     session = HTMLSession()
     url = "https://gokino.pl/olawa/repertuar/"
@@ -233,7 +232,7 @@ def um_olawa_scraper():
             raw_published_date = result.find('time')['datetime']
             overall_date = raw_published_date[0:10]
             detail_date = raw_published_date[11:19]
-            published_date = datetime.strptime(overall_date + ' ' +detail_date, '%Y-%m-%d %H:%M:%S')
+            published_date = datetime.strptime(overall_date + ' ' + detail_date, '%Y-%m-%d %H:%M:%S')
             if title not in returned_dict:
                 returned_dict[title] = {'content': content,
                                         'link': link,
@@ -244,4 +243,3 @@ def um_olawa_scraper():
                                         'link': link,
                                         'published_date': published_date}
     return returned_dict
-

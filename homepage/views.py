@@ -93,7 +93,7 @@ def register(request):
                           {'new_user': new_user}
                           )
     else:
-        user_form =UserRegistrationForm()
+        user_form = UserRegistrationForm()
         return render(request,
                       'homepage/register.html',
                       {'user_form': user_form}
@@ -137,6 +137,7 @@ def edit(request):
 def forum(request):
     all_topics = ForumTopic.objects.all().order_by('-id')
     return render(request, 'homepage/forum.html', {'all_topics': all_topics})
+
 
 @login_required
 def create_topic(request):
@@ -184,6 +185,7 @@ def post_detail(request, id, slug):
                                                          'thumbnail_url': topic_author_thumbnail_url,
                                                          'new_response_form': new_response_form})
 
+
 def local_news(request):
     olawa24_news = News.objects.filter(which_site='olawa24').order_by('-date_of_publication')
     tuolawa_news = News.objects.filter(which_site='tuolawa').order_by('-date_of_publication')
@@ -195,5 +197,3 @@ def local_news(request):
 def all_cityhall_news(request):
     umolawa_news = News.objects.filter(which_site='umolawa').order_by('-date_of_publication')
     return render(request, 'homepage/all_cityhall_news.html', {'umolawa_news': umolawa_news})
-
-

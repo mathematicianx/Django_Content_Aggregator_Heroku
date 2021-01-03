@@ -1,12 +1,11 @@
-from django.urls import resolve
-from django.test import TestCase
-from homepage.models import SimpleAd, ForumTopic, News, Movie, MovieSpectacles
-from homepage.views import index, show_all_ads, register, new_ad, edit, forum, create_topic, local_news, all_cityhall_news
 from django.contrib.auth import views as auth_views
 from django.http import HttpRequest, HttpResponse
 from django.template.loader import render_to_string
+from django.test import TestCase
+from django.urls import resolve
 from django.utils import timezone
-
+from homepage.models import SimpleAd, ForumTopic, News, Movie, MovieSpectacles
+from homepage.views import index, show_all_ads, register, new_ad, edit, forum, create_topic, local_news, all_cityhall_news
 
 
 class UrlResolveCorrectViewTest(TestCase):

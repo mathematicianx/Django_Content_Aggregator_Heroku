@@ -2,12 +2,13 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 import unittest
 
+
 class NewTest(unittest.TestCase):
 
     def setUp(self):
         self.options = Options()
         self.browser = webdriver.Firefox(options=self.options,
-                                   executable_path=r'C:\Users\gora-pc\AppData\Local\Programs\Python\Python38-32\Scripts\geckodriver.exe')
+                                         executable_path=r'C:\Users\gora-pc\AppData\Local\Programs\Python\Python38-32\Scripts\geckodriver.exe')
         # self.options.headless = True
 
     def tearDown(self):

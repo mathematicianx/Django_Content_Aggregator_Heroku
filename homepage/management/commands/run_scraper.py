@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
-from homepage.models import News, Movie, MovieSpectacles
 from django.utils import timezone
 from homepage.custom_webscraper import olawa24_scraper, tuolawa_scraper, kino_odra_scraper, go_kino_scraper, um_olawa_scraper
+from homepage.models import News, Movie, MovieSpectacles
 
 class Command(BaseCommand):
     help = 'Prints all book titles in the database'

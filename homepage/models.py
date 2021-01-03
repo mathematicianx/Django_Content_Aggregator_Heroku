@@ -1,13 +1,12 @@
-from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
-from sorl.thumbnail import ImageField as ThumbnailImageField
-from sorl.thumbnail import get_thumbnail
+from django.db import models
 from django.utils.html import mark_safe
 from django.urls import reverse
 from django.utils.text import slugify
 from tinymce import models as tinymce_models
-from django.conf import settings
-# Create your models here.
+from sorl.thumbnail import ImageField as ThumbnailImageField
+from sorl.thumbnail import get_thumbnail
 
 
 class News(models.Model):
@@ -64,6 +63,7 @@ class MovieSpectacles(models.Model):
     def __unicode__(self):
         return self.movie_name
 
+
 class SimpleAd(models.Model):
     title = models.CharField(max_length=250)
     author = models.ForeignKey(User,
@@ -87,12 +87,10 @@ class SimpleAd(models.Model):
         if self.image:
             return get_thumbnail(self.image, '1000x1000', quality=90)
 
-
     def image_tag(self):
-        return mark_safe('<img src="/media/%s"/>' % (self.thumbnail))
+        return mark_safe('<img src="/media/%s"/>' % self.thumbnail)
 
     image_tag.short_description = 'Thumbnail'
-
 
     def __str__(self):
         return self.title
@@ -127,7 +125,7 @@ class Profile(models.Model):
 
     date_of_birth = models.DateTimeField(blank=True, null=True)
     photo = models.ImageField(upload_to='uploads/',
-                                blank=True)
+                              blank=True)
 
     @property
     def thumbnail(self):
@@ -206,4 +204,3 @@ class ForumResponse(models.Model):
 
     def __str__(self):
         return "Dodano post dla tematu {}".format(self.topic)
-
