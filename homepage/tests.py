@@ -1,10 +1,13 @@
 from django.urls import resolve
 from django.test import TestCase
-from .models import SimpleAd, ForumTopic, News
-from .views import index, show_all_ads, register, new_ad, edit, forum, create_topic, local_news, all_cityhall_news
+from homepage.models import SimpleAd, ForumTopic, News, Movie, MovieSpectacles
+from homepage.views import index, show_all_ads, register, new_ad, edit, forum, create_topic, local_news, all_cityhall_news
 from django.contrib.auth import views as auth_views
 from django.http import HttpRequest, HttpResponse
 from django.template.loader import render_to_string
+from django.utils import timezone
+
+
 
 class UrlResolveCorrectViewTest(TestCase):
 
@@ -85,6 +88,7 @@ class UrlResolveCorrectViewTest(TestCase):
         path('<int:id>/<slug:slug>/', views.post_detail, name='post_detail'),
         """
 
+
 class ViewRendersCorrectHTMLTemplate(TestCase):
     def test_index_view_returns_correct_html(self):
         request = HttpRequest()
@@ -146,3 +150,88 @@ class ViewRendersCorrectHTMLTemplate(TestCase):
         expected_html = render_to_string('homepage/all_cityhall_news.html', {'umolawa_news': umolawa_news})
         self.assertEqual(response.content.decode(), expected_html)
 
+
+class ModelCreatesCorrectly(TestCase):
+    def create_news(self, title='Test news', link='http://www.test_link.com', content='content of a news', which_site='olawa24', date_of_publication=timezone.now()):
+        return News.objects.create(title=title, link=link, content=content, which_site=which_site, date_of_publication=date_of_publication)
+
+    def test_news_creation(self):
+        n = self.create_news()
+        self.assertTrue(isinstance(n, News))
+        self.assertEqual(n.__str__(), n.title)
+
+    def create_movie(self, title='Title of a movie', link='http://www.test_link_for_a_movie.com', which_site='gokino', duration=60, day_of_spectacle=timezone.now(), filmweb_score=7.6):
+        return Movie.objects.create(title=title, link=link, which_site=which_site, duration=duration, day_of_spectacle=day_of_spectacle, filmweb_score=filmweb_score)
+
+    def test_movie_creation(self):
+        m = self.create_movie()
+        self.assertTrue(isinstance(m, Movie))
+        self.assertEqual(m.__str__(), m.title)
+
+    def create_MovieSpectacle(self):
+        m = self.create_movie()
+        m.save()
+        return MovieSpectacles.objects.create(movie_name=Movie.objects.get(id=1), date=timezone.now())
+
+    def test_MovieSpectacle_creation(self):
+        spectacle = self.create_MovieSpectacle()
+        self.assertTrue(isinstance(spectacle, MovieSpectacles))
+        self.assertEqual(spectacle.__unicode__(), spectacle.movie_name)
+
+    def test_SimpleAd(self):
+        pass
+""" title = models.CharField(max_length=250)
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
+                               related_name='user_ads')
+    body = tinymce_models.HTMLField()
+    date_of_publication = models.DateTimeField(auto_now_add=True)
+    image = ThumbnailImageField(upload_to='uploads/',
+                                blank=True)
+    slug = models.SlugField(max_length=250,
+                            unique_for_date='date_of_publication')
+    price = models.IntegerField()
+
+    @property
+    def thumbnail(self):
+        if self.image:
+            return get_thumbnail(self.image, '200x200', quality=90)
+
+    @property
+    def resized_photo(self):
+        if self.image:
+            return get_thumbnail(self.image, '1000x1000', quality=90)
+
+
+    def image_tag(self):
+        return mark_safe('<img src="/media/%s"/>' % (self.thumbnail))
+
+    image_tag.short_description = 'Thumbnail'
+
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('homepage:ad_detail',
+                       args=[self.date_of_publication.year,
+                             self.date_of_publication.strftime('%m'),
+                             self.date_of_publication.strftime('%d'),
+                             self.slug])
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        slug = self.slug
+        while True:
+            try:
+                test_ad = SimpleAd.objects.get(slug=slug)
+                if test_ad == self:
+                    self.slug = slug
+                    break
+                else:
+                    slug = slug + '1'
+            except:
+                self.slug = slug
+                break
+        super(SimpleAd, self).save(*args, **kwargs)
+"""

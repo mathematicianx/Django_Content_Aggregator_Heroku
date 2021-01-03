@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'tinymce',
     'storages',
+    'rest_framework',
 
 ]
 
@@ -147,3 +148,6 @@ AWS_S3_OBJECT_PARAMETERS = {
  }
 
 DEFAULT_FILE_STORAGE = 'mysite.storage_backends.MediaStorage'
+REST_FRAMEWORK = {
+    'DEFAULT PERMISSION CLASESS': ['rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly']
+}

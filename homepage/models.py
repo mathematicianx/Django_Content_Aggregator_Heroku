@@ -61,6 +61,8 @@ class MovieSpectacles(models.Model):
     def __str__(self):
         return self.x
 
+    def __unicode__(self):
+        return self.movie_name
 
 class SimpleAd(models.Model):
     title = models.CharField(max_length=250)
