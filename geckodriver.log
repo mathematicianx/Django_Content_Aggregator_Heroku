@@ -4884,3 +4884,24 @@ console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Err
 1602605434221	Marionette	WARN	TLS certificate errors will be ignored for this session
 1602605437254	Marionette	INFO	Stopped listening on port 51832
 JavaScript error: resource://gre/modules/UrlClassifierListManager.jsm, line 691: TypeError: this.tablesData[table] is undefined
+1609756843867	geckodriver	INFO	Listening on 127.0.0.1:50808
+1609756846874	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-headless" "-foreground" "-no-remote" "-profile" "C:\\Users\\gora-pc\\AppData\\Local\\Temp\\rust_mozprofilePQ8kuo"
+*** You are running in headless mode.
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1609756848043	Marionette	INFO	Listening on port 50820
+1609756848389	Marionette	WARN	TLS certificate errors will be ignored for this session
+1609756853231	Marionette	INFO	Stopped listening on port 50820
+1609757176192	geckodriver	INFO	Listening on 127.0.0.1:51115
+1609757179201	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-headless" "-foreground" "-no-remote" "-profile" "C:\\Users\\gora-pc\\AppData\\Local\\Temp\\rust_mozprofile9JcUnR"
+*** You are running in headless mode.
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1609757180292	Marionette	INFO	Listening on port 51123
+1609757180722	Marionette	WARN	TLS certificate errors will be ignored for this session
+1609757183786	Marionette	INFO	Stopped listening on port 51123
+1609758253645	geckodriver	INFO	Listening on 127.0.0.1:51294
+1609758256655	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-headless" "-foreground" "-no-remote" "-profile" "C:\\Users\\gora-pc\\AppData\\Local\\Temp\\rust_mozprofileealtDX"
+*** You are running in headless mode.
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1609758257756	Marionette	INFO	Listening on port 51302
+1609758258172	Marionette	WARN	TLS certificate errors will be ignored for this session
+1609758261458	Marionette	INFO	Stopped listening on port 51302
