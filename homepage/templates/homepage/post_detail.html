@@ -43,6 +43,8 @@
                             <p>
                             {% if post_r.author.profile.thumbnail %}
                                 <img src="{{ post_r.author.profile.thumbnail.url }}">
+                            {% else %}
+                                <img src="{% static "images/default.png" %}">
                             {% endif %}
                             <p>Liczba postów: {{ post_r.author.profile.post_count }}</p>
                         </div>

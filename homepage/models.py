@@ -4,12 +4,19 @@ from django.db import models
 from django.utils.html import mark_safe
 from django.urls import reverse
 from django.utils.text import slugify
+from .managers import KinoOdraMoviesManager, Olawa24NewsManager,TuOlawaNewsManager, UMOlawaNewsManager, GoKinoMoviesManager
 from tinymce import models as tinymce_models
 from sorl.thumbnail import ImageField as ThumbnailImageField
 from sorl.thumbnail import get_thumbnail
 
 
 class News(models.Model):
+    objects = models.Manager()
+    olawa24_manager = Olawa24NewsManager()
+    tuolawa_manager = TuOlawaNewsManager()
+    umolawa_manager = UMOlawaNewsManager()
+
+
     STATUS_olawa24 = 'olawa24'
     STATUS_tuolawa = 'tuolawa'
     STATUS_umolawa = 'umolawa'
@@ -33,6 +40,10 @@ class News(models.Model):
 
 
 class Movie(models.Model):
+    objects = models.Manager() # The default manager.
+    kino_odra_manager = KinoOdraMoviesManager() #kino odra manager
+    gokino_manager = GoKinoMoviesManager()
+
     STATUS_kinoodra = 'kino_odra'
     STATUS_gokino = 'gokino'
     STATUS_CHOICES = (

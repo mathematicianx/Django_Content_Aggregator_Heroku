@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from .models import News, Movie, MovieSpectacles, SimpleAd, Profile, ForumTopic, ForumResponse, User
 from .forms import SimpleAdForm, LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm, CreateTopicForm, CreateResponseForm
 from .custom_webscraper import olawa24_scraper, tuolawa_scraper, kino_odra_scraper, go_kino_scraper, um_olawa_scraper
@@ -10,55 +11,51 @@ from django.utils import timezone
 from django.shortcuts import redirect
 from django.views import View
 
+
 class indexClassView(View):
     def get(self, request):
-        return HttpResponse('it works')
 
-def index(request):
-    kino_odra_movies = Movie.objects.filter(which_site='kino_odra').filter(day_of_spectacle=timezone.now().replace(hour=0, minute=0, second=0, microsecond=0))
-    kino_odra_spectacles = {}
-    for one_movie in kino_odra_movies:
-        dates2 = []
-        for c in one_movie.all_spectacles.all():
-            dates2.append(c.date.strftime('%H:%M'))
-        kino_odra_spectacles[one_movie] = dates2
+        olawa24_news = News.olawa24_manager.all().order_by('-date_of_publication')[:10]
+        tuolawa_news = News.tuolawa_manager.all().order_by('-date_of_publication')[:10]
+        umolawa_news = News.umolawa_manager.all().order_by('-date_of_publication')[:5]
+        kino_odra_movies = Movie.kino_odra_manager.all().filter(day_of_spectacle=timezone.now().replace(hour=0, minute=0, second=0, microsecond=0))
+        kino_odra_spectacles = {}
+        for one_movie in kino_odra_movies:
+            spectacle_dates_list = []
+            for spectacle_date in one_movie.all_spectacles.all():
+                spectacle_dates_list.append(spectacle_date.date.strftime('%H:%M'))
+            kino_odra_spectacles[one_movie] = spectacle_dates_list
 
+        go_kino_movies = Movie.gokino_manager.all().filter(day_of_spectacle=timezone.now().replace(hour=0, minute=0, second=0, microsecond=0))
+        go_kino_spectacles = {}
+        for one_movie2 in go_kino_movies:
+            spectacle_dates_list2 = []
+            for spectacle_date2 in one_movie2.all_spectacles.all():
+                spectacle_dates_list2.append(spectacle_date2.date.strftime('%H:%M'))
+            go_kino_spectacles[one_movie2] = spectacle_dates_list2
 
-    gokino_movies = Movie.objects.filter(which_site='gokino').filter(day_of_spectacle=timezone.now().replace(hour=0, minute=0, second=0, microsecond=0))
-    gokino_spectacles = {}
-    for one_movie in gokino_movies:
-        dates1 = []
-        for d in one_movie.all_spectacles.all():
-            dates1.append(d.date.strftime('%H:%M'))
-        gokino_spectacles[one_movie] = dates1
-
-
-    olawa24_news = News.objects.filter(which_site='olawa24').order_by('-date_of_publication')[:10]
-    tuolawa_news = News.objects.filter(which_site='tuolawa').order_by('-date_of_publication')[:10]
-    umolawa_news = News.objects.filter(which_site='umolawa').order_by('-date_of_publication')[:5]
-
-
-    return render(request, 'homepage/index.html', {'olawa24_news': olawa24_news,
-                                                        'tuolawa_news': tuolawa_news,
-                                                        'kino_odra_movies': kino_odra_spectacles,
-                                                        'gokino_movies': gokino_spectacles,
-                                                        'umolawa_news': umolawa_news,
-                                                        })
-
-def show_all_ads(request):
-    all_ads = SimpleAd.objects.all().order_by('-id')
-    return render(request, 'homepage/show_all_ads.html', {'all_ads': all_ads})
+        return render(request, 'homepage/index.html', {'olawa24_news': olawa24_news,
+                                                       'tuolawa_news': tuolawa_news,
+                                                       'umolawa_news': umolawa_news,
+                                                       'kino_odra_movies': kino_odra_spectacles,
+                                                       'go_kino_spectacles': go_kino_spectacles})
 
 
+class ShowAds(View):
+    def get(self, request):
+        all_ads = SimpleAd.objects.all().order_by('-id')
+        return render(request, 'homepage/show_all_ads.html', {'all_ads': all_ads})
 
-def ad_detail(request, year, month, day, ad):
-    ad = get_object_or_404(SimpleAd,
-                           slug=ad,
-                           date_of_publication__year=year,
-                           date_of_publication__month=month,
-                           date_of_publication__day=day)
 
-    return render(request, 'homepage/ad_detail.html', {'ad': ad})
+class AdDetail(View):
+    def get(self, request, year, month, day, ad):
+        ad = get_object_or_404(SimpleAd,
+                               slug=ad,
+                               date_of_publication__year=year,
+                               date_of_publication__month=month,
+                               date_of_publication__day=day)
+        return render(request, 'homepage/ad_detail.html', {'ad': ad})
+
 
 
 def user_login(request):
@@ -104,27 +101,25 @@ def register(request):
                       {'user_form': user_form}
                       )
 
-
-def new_ad(request):
+class NewAd(View):
     all_ads = SimpleAd.objects.all()
-    if request.method == 'POST':
-        ad_form = SimpleAdForm(user=request.user, data=request.POST,
-                               files=request.FILES)
+    def post(self, request):
+        ad_form = SimpleAdForm(user=request.user,data=request.POST, files=request.FILES)
         if ad_form.is_valid():
             new_ad = ad_form.save(commit=False)
             new_ad.author = request.user
             new_ad.save()
             ad_form = SimpleAdForm(user=request.user)
             return redirect('homepage:show_all_ads')
-    else:
+
+    def get(self, request):
         ad_form = SimpleAdForm(user=request.user)
-    return render(request, 'homepage/new_ad.html', {'ad_form': ad_form,
-                                                    'all_ads': all_ads})
+        return render(request, 'homepage/new_ad.html', {'ad_form': ad_form,
+                                                        'all_ads': self.all_ads})
 
-
-@login_required
-def edit(request):
-    if request.method == 'POST':
+class Edit(View):
+    @method_decorator(login_required)
+    def post(self, request):
         user_form = UserEditForm(instance=request.user, data=request.POST)
         profile_form = ProfileEditForm(instance=request.user.profile,
                                        data=request.POST,
@@ -132,16 +127,20 @@ def edit(request):
         if user_form.is_valid():
             user_form.save()
             profile_form.save()
-    else:
+        return redirect('homepage:index')
+
+    @method_decorator(login_required)
+    def get(self, request):
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
-    return render(request, 'homepage/edit.html', {'user_form': user_form,
-                                                  'profile_form': profile_form})
+        return render(request, 'homepage/edit.html', {'user_form': user_form,
+                                                      'profile_form': profile_form})
 
 
-def forum(request):
-    all_topics = ForumTopic.objects.all().order_by('-id')
-    return render(request, 'homepage/forum.html', {'all_topics': all_topics})
+class ForumView(View):
+    def get(self, request):
+        all_topics = ForumTopic.objects.all().order_by('-id')
+        return render(request, 'homepage/forum.html', {'all_topics': all_topics})
 
 
 @login_required
@@ -168,10 +167,12 @@ def post_detail(request, id, slug):
 
     try:
         post_responses = ForumResponse.objects.select_related('author__profile').filter(topic=post_topic).order_by('date_of_publication')
-    except Exception:
+    except AttributeError:
         post_responses = ''
-
-    topic_author_thumbnail_url = post_topic.author.profile.thumbnail.url
+    try:
+        topic_author_thumbnail_url = post_topic.author.profile.thumbnail.url
+    except AttributeError:
+        topic_author_thumbnail_url = None
 
     if request.method == 'POST':
         new_response_form = CreateResponseForm(user=request.user, data=request.POST)
@@ -191,14 +192,17 @@ def post_detail(request, id, slug):
                                                          'new_response_form': new_response_form})
 
 
-def local_news(request):
-    olawa24_news = News.objects.filter(which_site='olawa24').order_by('-date_of_publication')
-    tuolawa_news = News.objects.filter(which_site='tuolawa').order_by('-date_of_publication')
+class LocalNews(View):
+    def get(self, request):
+        olawa24_news = News.olawa24_manager.order_by('-date_of_publication')
+        tuolawa_news = News.tuolawa_manager.order_by('-date_of_publication')
 
-    return render(request, 'homepage/local_news.html', {'olawa24_news': olawa24_news,
-                                                        'tuolawa_news': tuolawa_news})
+        return render(request, 'homepage/local_news.html', {'olawa24_news': olawa24_news,
+                                                            'tuolawa_news': tuolawa_news})
 
 
-def all_cityhall_news(request):
-    umolawa_news = News.objects.filter(which_site='umolawa').order_by('-date_of_publication')
-    return render(request, 'homepage/all_cityhall_news.html', {'umolawa_news': umolawa_news})
+class CityhallNews(View):
+    def get(self, request):
+        umolawa_news = News.umolawa_manager.order_by('-date_of_publication')
+        return render(request, 'homepage/all_cityhall_news.html', {'umolawa_news': umolawa_news})
+
