@@ -8,6 +8,11 @@ from .forms import SimpleAdForm, LoginForm, UserRegistrationForm, UserEditForm, 
 from .custom_webscraper import olawa24_scraper, tuolawa_scraper, kino_odra_scraper, go_kino_scraper, um_olawa_scraper
 from django.utils import timezone
 from django.shortcuts import redirect
+from django.views import View
+
+class indexClassView(View):
+    def get(self, request):
+        return HttpResponse('it works')
 
 def index(request):
     kino_odra_movies = Movie.objects.filter(which_site='kino_odra').filter(day_of_spectacle=timezone.now().replace(hour=0, minute=0, second=0, microsecond=0))
