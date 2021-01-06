@@ -4,7 +4,6 @@ from homepage.custom_webscraper import olawa24_scraper, tuolawa_scraper, kino_od
 from homepage.models import News, Movie, MovieSpectacles
 
 class Command(BaseCommand):
-    help = 'Prints all book titles in the database'
 
     def handle(self, *args, **kwargs):
         returned_dict = olawa24_scraper()
@@ -119,10 +118,5 @@ class Command(BaseCommand):
             for d in one_movie.all_spectacles.all():
                 dates1.append(d.date.strftime('%H:%M'))
             gokino_spectacles[one_movie] = dates1
-
-
-        # olawa24_news = News.objects.filter(which_site='olawa24').order_by('-date_of_publication')[:10]
-        # tuolawa_news = News.objects.filter(which_site='tuolawa').order_by('-date_of_publication')[:10]
-        # umolawa_news = News.objects.filter(which_site='umolawa').order_by('-date_of_publication')[:5]
 
         return "scraper finished"
