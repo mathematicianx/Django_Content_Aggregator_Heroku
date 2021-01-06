@@ -1,5 +1,4 @@
-from django.shortcuts import render, get_object_or_404, get_list_or_404
-from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -12,7 +11,7 @@ from django.shortcuts import redirect
 from django.views import View
 
 
-class indexClassView(View):
+class IndexClassView(View):
     def get(self, request):
 
         olawa24_news = News.olawa24_manager.all().order_by('-date_of_publication')[:10]
@@ -56,33 +55,36 @@ class AdDetail(View):
                                date_of_publication__day=day)
         return render(request, 'homepage/ad_detail.html', {'ad': ad})
 
+# basic login function,it was replaced by integrated in django loginview, I am leaving it here just to know how to do it
+# def user_login(request):
+#     if request.method == 'POST':
+#         form = LoginForm(request.POST)
+#         if form.is_valid():
+#             cd = form.cleaned_data
+#             user = authenticate(username=cd['username'],
+#                                 password=cd['password'])
+#             if user is not None:
+#                 if user.is_active:
+#                     login(request, user)
+#                     messages.success(request, 'Uwierzytelnienie zakończyło się sukcesem')
+#                     # return HttpResponse('Uwierzytelnienie zakończyło się sukcesem')
+#                 else:
+#                     messages.success(request, 'Konto jest zablokowane')
+#                     # return HttpResponse('Konto jest zablokowane')
+#             else:
+#                 messages.success(request, 'Nieprawidłowe dane uwierzytelniające')
+#                 # return HttpResponse('Nieprawidłowe dane uwierzytelniające')
+#     else:
+#         form = LoginForm()
+#     return render(request, 'homepage/login.html', {'form': form})
 
 
-def user_login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            user = authenticate(username=cd['username'],
-                                password=cd['password'])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    messages.success(request, 'Uwierzytelnienie zakończyło się sukcesem')
-                    # return HttpResponse('Uwierzytelnienie zakończyło się sukcesem')
-                else:
-                    messages.success(request, 'Konto jest zablokowane')
-                    # return HttpResponse('Konto jest zablokowane')
-            else:
-                messages.success(request, 'Nieprawidłowe dane uwierzytelniające')
-                # return HttpResponse('Nieprawidłowe dane uwierzytelniające')
-    else:
-        form = LoginForm()
-    return render(request, 'homepage/login.html', {'form': form})
+class Register(View):
+    def get(self, request):
+        user_form = UserRegistrationForm()
+        return render(request, 'homepage/register.html', {'user_form': user_form})
 
-
-def register(request):
-    if request.method == 'POST':
+    def post(self, request):
         user_form = UserRegistrationForm(request.POST)
         if user_form.is_valid():
             new_user = user_form.save(commit=False)
@@ -90,16 +92,8 @@ def register(request):
             new_user.save()
             profile = Profile.objects.create(user=new_user)
             messages.success(request, 'Uwierzytelnienie zakończyło się sukcesem')
-            return render(request,
-                          'homepage/register_done.html',
-                          {'new_user': new_user}
-                          )
-    else:
-        user_form = UserRegistrationForm()
-        return render(request,
-                      'homepage/register.html',
-                      {'user_form': user_form}
-                      )
+            return render(request, 'homepage/register_done.html', {'new_user': new_user})
+
 
 class NewAd(View):
     all_ads = SimpleAd.objects.all()
@@ -118,6 +112,7 @@ class NewAd(View):
                                                         'all_ads': self.all_ads})
 
 class Edit(View):
+
     @method_decorator(login_required)
     def post(self, request):
         user_form = UserEditForm(instance=request.user, data=request.POST)
@@ -143,9 +138,9 @@ class ForumView(View):
         return render(request, 'homepage/forum.html', {'all_topics': all_topics})
 
 
-@login_required
-def create_topic(request):
-    if request.method == 'POST':
+class CreateTopic(View):
+    @method_decorator(login_required)
+    def post(self, request):
         new_topic_form = CreateTopicForm(user=request.user, data=request.POST)
         if new_topic_form.is_valid():
             new_topic = new_topic_form.save(commit=False)
@@ -153,28 +148,48 @@ def create_topic(request):
             new_topic.save()
             new_topic_form = CreateTopicForm(user=request.user)
             return redirect('homepage:forum')
-    else:
+
+    @method_decorator(login_required)
+    def get(self, request):
         new_topic_form = CreateTopicForm(user=request.user)
-
-    return render(request,
-                  'homepage/create_topic.html', {'new_topic_form': new_topic_form})
+        return render(request, 'homepage/create_topic.html', {'new_topic_form': new_topic_form})
 
 
-def post_detail(request, id, slug):
-    post_topic = get_object_or_404(ForumTopic,
-                                   slug=slug,
-                                   id=id)
+class PostDetail(View):
+    def get(self, request, slug, id):
+        post_topic = get_object_or_404(ForumTopic,
+                                       slug=slug,
+                                       id=id)
 
-    try:
-        post_responses = ForumResponse.objects.select_related('author__profile').filter(topic=post_topic).order_by('date_of_publication')
-    except AttributeError:
-        post_responses = ''
-    try:
-        topic_author_thumbnail_url = post_topic.author.profile.thumbnail.url
-    except AttributeError:
-        topic_author_thumbnail_url = None
+        try:
+            post_responses = ForumResponse.objects.select_related('author__profile').filter(topic=post_topic).order_by('date_of_publication')
+        except AttributeError:
+            post_responses = ''
+        try:
+            topic_author_thumbnail_url = post_topic.author.profile.thumbnail.url
+        except AttributeError:
+            topic_author_thumbnail_url = None
 
-    if request.method == 'POST':
+        new_response_form = CreateResponseForm(user=request.user)
+        return render(request, 'homepage/post_detail.html', {'post_topic': post_topic,
+                                                             'post_responses': post_responses,
+                                                             'thumbnail_url': topic_author_thumbnail_url,
+                                                             'new_response_form': new_response_form})
+
+    @method_decorator(login_required)
+    def post(self, request, id, slug):
+        post_topic = get_object_or_404(ForumTopic,
+                                       slug=slug,
+                                       id=id)
+        try:
+            post_responses = ForumResponse.objects.select_related('author__profile').filter(topic=post_topic).order_by('date_of_publication')
+        except AttributeError:
+            post_responses = ''
+        try:
+            topic_author_thumbnail_url = post_topic.author.profile.thumbnail.url
+        except AttributeError:
+            topic_author_thumbnail_url = None
+
         new_response_form = CreateResponseForm(user=request.user, data=request.POST)
         if new_response_form.is_valid():
             new_response = new_response_form.save(commit=False)
@@ -182,14 +197,10 @@ def post_detail(request, id, slug):
             new_response.topic = post_topic
             new_response.save()
             new_response_form = CreateResponseForm(user=request.user)
-
-    else:
-        new_response_form = CreateResponseForm(user=request.user)
-
-    return render(request, 'homepage/post_detail.html', {'post_topic': post_topic,
-                                                         'post_responses': post_responses,
-                                                         'thumbnail_url': topic_author_thumbnail_url,
-                                                         'new_response_form': new_response_form})
+        return render(request, 'homepage/post_detail.html', {'post_topic': post_topic,
+                                                             'post_responses': post_responses,
+                                                             'thumbnail_url': topic_author_thumbnail_url,
+                                                             'new_response_form': new_response_form})
 
 
 class LocalNews(View):
@@ -205,4 +216,3 @@ class CityhallNews(View):
     def get(self, request):
         umolawa_news = News.umolawa_manager.order_by('-date_of_publication')
         return render(request, 'homepage/all_cityhall_news.html', {'umolawa_news': umolawa_news})
-
