@@ -18,6 +18,7 @@ class NewsSerializer(serializers.ModelSerializer):
         ]
 
 class SimpleAdSerializer(serializers.ModelSerializer):
+<<<<<<< HEAD
     date_of_publication = datetime.now()
     class Meta:
 <<<<<<< HEAD
@@ -27,10 +28,22 @@ class SimpleAdSerializer(serializers.ModelSerializer):
             queryset=SimpleAd.objects.all(),
             field='slug',
             date_field='date_of_publication'),
+=======
+
+    class Meta:
+        model = SimpleAd
+        fields = ('title', 'body', 'price', 'author')
+        validators = [ UniqueForYearValidator(
+            queryset=SimpleAd.objects.all(),
+            field='slug',
+            date_field='date_of_publication'
+        ),
+>>>>>>> bda6e54 (basic functionality of rest api for Simple Advertisements, without using generics)
         ]
 
 
 
+<<<<<<< HEAD
 # class UserSerializer(serializers.ModelSerializer):
 #     user_ads = serializers.PrimaryKeyRelatedField(many=True, queryset=SimpleAd.objects.all())
 #
@@ -40,3 +53,11 @@ class SimpleAdSerializer(serializers.ModelSerializer):
 =======
         model = SimpleAd
 >>>>>>> 59119d1 (Create news from existing JSON data functionality added)
+=======
+class UserSerializer(serializers.ModelSerializer):
+    user_ads = serializers.PrimaryKeyRelatedField(many=True, queryset=SimpleAd.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'user_ads']
+>>>>>>> bda6e54 (basic functionality of rest api for Simple Advertisements, without using generics)
