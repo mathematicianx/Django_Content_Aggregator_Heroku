@@ -27,7 +27,7 @@ SECRET_KEY = '_i$ip&z&@z7x85wx_rtus@p&paepa0_+_=sl1na0_s^ig)p((f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['django-test-12345.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['olawa-agregator.herokuapp.com', '127.0.0.1']
 
 
 # Application definition

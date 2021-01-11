@@ -23,6 +23,7 @@ urlpatterns = [
     path('', include('homepage.urls', namespace='homepage')),
     path('', include('django.contrib.auth.urls')),
     path('tinymce/', include('tinymce.urls')),
+    path('api/', include('homepage.api.urls', namespace='api')),
 ]
 
 if settings.DEBUG:
