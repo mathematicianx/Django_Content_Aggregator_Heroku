@@ -1,3 +1,4 @@
+from datetime import datetime
 from ..models import News, SimpleAd
 from django.contrib.auth.models import User
 from rest_framework import serializers
@@ -17,22 +18,21 @@ class NewsSerializer(serializers.ModelSerializer):
         ]
 
 class SimpleAdSerializer(serializers.ModelSerializer):
-
+    date_of_publication = datetime.now()
     class Meta:
         model = SimpleAd
-        fields = ('title', 'body', 'price', 'author')
+        fields = ('title', 'body', 'price', 'author', 'slug', 'date_of_publication',)
         validators = [ UniqueForYearValidator(
             queryset=SimpleAd.objects.all(),
             field='slug',
-            date_field='date_of_publication'
-        ),
+            date_field='date_of_publication'),
         ]
 
 
 
-class UserSerializer(serializers.ModelSerializer):
-    user_ads = serializers.PrimaryKeyRelatedField(many=True, queryset=SimpleAd.objects.all())
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'user_ads']
+# class UserSerializer(serializers.ModelSerializer):
+#     user_ads = serializers.PrimaryKeyRelatedField(many=True, queryset=SimpleAd.objects.all())
+#
+#     class Meta:
+#         model = User
+#         fields = ['id', 'username', 'user_ads']

@@ -1,5 +1,7 @@
 from django.urls import path
+from django.views.decorators.csrf import csrf_exempt
 from . import views
+
 
 app_name = 'api'
 
@@ -11,5 +13,5 @@ urlpatterns = [
     path('news-delete/<pk>/', views.DeleteNewsView.as_view(), name='news_delete'),
     path('advertisement/', views.AdListView.as_view(), name='advertisement'),
     path('advertisement/<pk>/', views.SimpleAdDetailedView.as_view(), name='simplead_detail'),
-    path('advertisement-create/', views.CreateSimpleAdView.as_view(), name='simplead_create'),
+    path('advertisement-create/', csrf_exempt(views.CreateSimpleAdView.as_view()), name='simplead_create'),
 ]

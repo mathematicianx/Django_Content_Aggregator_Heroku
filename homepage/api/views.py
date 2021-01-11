@@ -1,9 +1,11 @@
+from datetime import datetime
 from django.views import View
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
-from rest_framework import generics
+
 from ..models import News, SimpleAd
 from .serializers import NewsSerializer, SimpleAdSerializer
+from rest_framework import generics, status
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -75,12 +77,16 @@ class SimpleAdDetailedView(View):
 class CreateSimpleAdView(APIView):
     authentication_classes = (BasicAuthentication, )
     permission_classes = (IsAuthenticated,)
+
     def post(self, request):
-        user = request.user
         serializer = SimpleAdSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(author=self.request.user)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)
         return Response(serializer.data)
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+    # def perform_create(self, request serializer):
+    #     serializer = SimpleAdSerializer(data=request.data)
+    #     serializer.save(author=self.request.user)
