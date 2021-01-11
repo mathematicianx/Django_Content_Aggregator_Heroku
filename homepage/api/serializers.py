@@ -20,6 +20,7 @@ class NewsSerializer(serializers.ModelSerializer):
 class SimpleAdSerializer(serializers.ModelSerializer):
     date_of_publication = datetime.now()
     class Meta:
+<<<<<<< HEAD
         model = SimpleAd
         fields = ('title', 'body', 'price', 'author', 'slug', 'date_of_publication',)
         validators = [ UniqueForYearValidator(
@@ -36,3 +37,6 @@ class SimpleAdSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = User
 #         fields = ['id', 'username', 'user_ads']
+=======
+        model = SimpleAd
+>>>>>>> 59119d1 (Create news from existing JSON data functionality added)

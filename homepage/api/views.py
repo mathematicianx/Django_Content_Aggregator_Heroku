@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from datetime import datetime
 from django.views import View
 from django.http import HttpResponse, JsonResponse
@@ -10,11 +11,24 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+=======
+from django.shortcuts import get_object_or_404
+from rest_framework import generics
+from ..models import News
+from .serializers import NewsSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+>>>>>>> 59119d1 (Create news from existing JSON data functionality added)
 
 class NewsListView(generics.ListAPIView):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
+#
+# class NewsDetailView(generics.RetrieveAPIView):
+#     queryset = News.objects.get()
+#     serializer_class = NewsSerializer
 
+<<<<<<< HEAD
 
 class DetailedView(APIView):
 
@@ -25,10 +39,22 @@ class DetailedView(APIView):
 
 class CreateNewsView(APIView):
     permission_classes = (IsAuthenticated,)
+=======
+class DetailedView(APIView):
+
+    def get(self, request, pk):
+        queryset = get_object_or_404(News, pk=pk)
+        serializer = NewsSerializer(queryset)
+        return Response(serializer.data)
+
+class CreateNewsView(APIView):
+
+>>>>>>> 59119d1 (Create news from existing JSON data functionality added)
     def post(self, request):
         serializer = NewsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+<<<<<<< HEAD
         return Response(serializer.data)
 
 class UpdateNewsView(APIView):
@@ -90,3 +116,6 @@ class CreateSimpleAdView(APIView):
     # def perform_create(self, request serializer):
     #     serializer = SimpleAdSerializer(data=request.data)
     #     serializer.save(author=self.request.user)
+=======
+        return Response(serializer.data)
+>>>>>>> 59119d1 (Create news from existing JSON data functionality added)
