@@ -4,3 +4,5 @@
 "*.pyc" 
 "*.log"
 "*.sqlite3"
+"/homepage/migrations"
+"homepage/api/__pycache__"
