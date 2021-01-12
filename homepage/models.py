@@ -215,3 +215,51 @@ class ForumResponse(models.Model):
 
     def __str__(self):
         return "Dodano post dla tematu {}".format(self.topic)
+
+class ImageGallery(models.Model):
+    title = models.CharField(max_length=250)
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
+                               related_name='user_ads')
+    date_of_publication = models.DateTimeField(auto_now_add=True)
+    image = ThumbnailImageField(upload_to='uploads/',
+                                blank=True)
+    slug = models.SlugField(max_length=250,
+                            unique_for_date='date_of_publication')
+
+    @property
+    def thumbnail(self):
+        if self.image:
+            return get_thumbnail(self.image, '200x200', quality=90)
+
+    #
+    # def image_tag(self):
+    #     return mark_safe('<img src="/media/%s"/>' % self.thumbnail)
+    #
+    # # image_tag.short_description = 'Thumbnail'
+
+    def __str__(self):
+        return self.title
+
+    # def get_absolute_url(self):
+    #     return reverse('homepage:ad_detail',
+    #                    args=[self.date_of_publication.year,
+    #                          self.date_of_publication.strftime('%m'),
+    #                          self.date_of_publication.strftime('%d'),
+    #                          self.slug])
+    #
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(self.title)
+    #     slug = self.slug
+    #     while True:
+    #         try:
+    #             test_ad = SimpleAd.objects.get(slug=slug)
+    #             if test_ad == self:
+    #                 self.slug = slug
+    #                 break
+    #             else:
+    #                 slug = slug + '1'
+    #         except:
+    #             self.slug = slug
+    #             break
+    #     super(SimpleAd, self).save(*args, **kwargs)

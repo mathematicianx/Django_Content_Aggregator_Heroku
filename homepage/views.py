@@ -216,3 +216,11 @@ class CityhallNews(View):
     def get(self, request):
         umolawa_news = News.umolawa_manager.order_by('-date_of_publication')
         return render(request, 'homepage/all_cityhall_news.html', {'umolawa_news': umolawa_news})
+
+class Gallery(View):
+    def get(self, request):
+        context = 'context'
+        return render(request, 'homepage/gallery.html', {'context': context})
+    # def get(self, request):
+    #     all_topics = ForumTopic.objects.all().order_by('-id')
+    #     return render(request, 'homepage/forum.html', {'all_topics': all_topics})
