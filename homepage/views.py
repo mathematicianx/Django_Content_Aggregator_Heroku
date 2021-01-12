@@ -221,6 +221,3 @@ class Gallery(View):
     def get(self, request):
         context = 'context'
         return render(request, 'homepage/gallery.html', {'context': context})
-    # def get(self, request):
-    #     all_topics = ForumTopic.objects.all().order_by('-id')
-    #     return render(request, 'homepage/forum.html', {'all_topics': all_topics})

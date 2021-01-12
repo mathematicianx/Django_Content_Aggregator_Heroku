@@ -113,3 +113,5 @@ class CreateSimpleAdView(APIView):
         else:
             print(serializer.errors)
 
+
+
