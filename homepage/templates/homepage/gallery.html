@@ -10,25 +10,24 @@
         <div class="col-12-center">
             <div class="row-forum">
                 <div class="col-9-center">
-                    <h2> {{ all_topics.count }} gorących tematów do dyskusji</h2>
+                    <h2> {{ gallery_images.count }} zdjęć w galerii</h2>
                 </div>
                 <div class="col-3-center-no-brdr">
-                    <a style="background-color:#2b3239" href="{% url "homepage:create_topic" %}" class="btn btn-secondary">Załóż temat</a>
+                    <a style="background-color:#2b3239" href="{% url "homepage:add_image" %}" class="btn btn-secondary">Dodaj zdjęcie</a>
                 </div>
             </div>
             <div class="col-12-no-brdr">
-            {% for topic in all_topics %}
-                    <div class="row-forum">
-                        <div class="col-9">
-                            <p class="title-news"><a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a></p>
-                            <p class="date-cont">{{ topic.date_of_publication}} przez {{ topic.author }}</p>
+                {% if gallery_images %}
+                    {% for key,value in row_table.items %}
+                        <div class="row-forum">
+                            {% for image in value %}
+                                <div class="col-3">
+                                    <img src="{{ image.thumbnail.url }}" alt="{{ image.title }}">
+                                </div>
+                            {% endfor %}
                         </div>
-                        <div class="col-3">
-                            <p>Liczba postów: <strong>{{ topic.topic_count }}</strong></p>
-                            <p>Data publikacji ostatniego posta: <br>{{ topic.last_post_date }}</p>
-                        </div>
-                    </div>
-            {% endfor %}
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>

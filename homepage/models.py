@@ -216,3 +216,24 @@ class ForumResponse(models.Model):
     def __str__(self):
         return "Dodano post dla tematu {}".format(self.topic)
 
+class Gallery(models.Model):
+    # objects = models.Manager()
+    title = models.CharField(max_length=250, default='bez tytulu')
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
+                               related_name='user_images')
+    date_of_publication = models.DateTimeField(auto_now_add=True)
+    image = ThumbnailImageField(upload_to='uploads/',
+                                blank=True)
+    slug = models.SlugField(max_length=250,
+                            unique_for_date='date_of_publication')
+
+    @property
+    def thumbnail(self):
+        if self.image:
+            return get_thumbnail(self.image, '200x200', quality=90)
+
+
+    def __str__(self):
+        return self.title
+

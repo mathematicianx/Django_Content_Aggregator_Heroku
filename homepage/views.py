@@ -3,8 +3,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from .models import News, Movie, MovieSpectacles, SimpleAd, Profile, ForumTopic, ForumResponse, User
-from .forms import SimpleAdForm, LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm, CreateTopicForm, CreateResponseForm
+from .models import News, Movie, MovieSpectacles, SimpleAd, Profile, ForumTopic, ForumResponse, User, Gallery
+from .forms import SimpleAdForm, LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm, CreateTopicForm, CreateResponseForm, AddImageToGalleryForm
 from .custom_webscraper import olawa24_scraper, tuolawa_scraper, kino_odra_scraper, go_kino_scraper, um_olawa_scraper
 from django.utils import timezone
 from django.shortcuts import redirect
@@ -217,7 +217,43 @@ class CityhallNews(View):
         umolawa_news = News.umolawa_manager.order_by('-date_of_publication')
         return render(request, 'homepage/all_cityhall_news.html', {'umolawa_news': umolawa_news})
 
-class Gallery(View):
+class GalleryView(View):
     def get(self, request):
-        context = 'context'
-        return render(request, 'homepage/gallery.html', {'context': context})
+        gallery_images = Gallery.objects.all()
+        # gallery_images = [1, 2, 3, 4, 6, 7, 8, 9]
+        column_table = [0, 1, 2, 3]
+        row_table = {}
+        small_table = []
+        start = gallery_images[0].id
+        end = start + len(gallery_images)
+
+        #TODO change for loop to while loop in case some images were deleted.
+
+        for i in range(start, end, 4):
+            small_table = []
+            for j in range(0, len(column_table)):
+                try:
+                    small_table.append(Gallery.objects.get(id=i+j))
+                except Gallery.DoesNotExist:
+                    small_table.append(None)
+            row_table[i] = small_table
+
+        return render(request, 'homepage/gallery.html', {'gallery_images': gallery_images,
+                                                         'row_table': row_table,
+                                                         'column_table': column_table})
+
+class AddImage(View):
+    @method_decorator(login_required)
+    def post(self, request):
+        new_image_form = AddImageToGalleryForm(user=request.user, data=request.POST, files=request.FILES)
+        if new_image_form.is_valid():
+            new_image = new_image_form.save(commit=False)
+            new_image.author = request.user
+            new_image.save()
+            new_image_form = AddImageToGalleryForm(user=request.user)
+            return redirect('homepage:gallery')
+
+    @method_decorator(login_required)
+    def get(self, request):
+        new_image_form = AddImageToGalleryForm(user=request.user)
+        return render(request, 'homepage/add_image.html', {'new_image_form': new_image_form})

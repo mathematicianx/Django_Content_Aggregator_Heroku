@@ -1,0 +1,20 @@
+{% extends "homepage/base.html" %}
+{% block title %}moj blog{% endblock %}
+{% load thumbnail %}
+{% load static %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-12">
+          <form action="." method="post" enctype="multipart/form-data">
+              {{new_image_form.as_p}}
+              {% csrf_token %}
+              <p><input type="submit" value="Dodaj zdjęcie do galerii"></p>
+          </form>
+      </div>
+    </div>
+</div>
+{% endblock %}
+

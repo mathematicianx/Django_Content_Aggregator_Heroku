@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import SimpleAd, Profile, ForumTopic, ForumResponse
+from .models import SimpleAd, Profile, ForumTopic, ForumResponse, Gallery
 from tinymce.widgets import TinyMCE
 
 
@@ -95,4 +95,19 @@ class CreateResponseForm(forms.ModelForm):
         fields = ('body',)
         labels = {
             'body': 'Treść posta',
+        }
+
+class AddImageToGalleryForm(forms.ModelForm):
+    # body = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}), label='Treść ogłoszenia')
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(AddImageToGalleryForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = Gallery
+        fields = ('title', 'image',)
+        labels = {
+            'title': 'Tytuł zdjęcia',
+            'image': 'Zdjęcie'
         }

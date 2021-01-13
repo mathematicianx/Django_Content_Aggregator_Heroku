@@ -25,6 +25,7 @@ urlpatterns = [
     path('create_topic/', views.CreateTopic.as_view(), name='create_topic'),
     path('local_news/', views.LocalNews.as_view(), name='local_news'),
     path('all_cityhall_news/', views.CityhallNews.as_view(), name='all_cityhall_news'),
-    path('gallery/', views.Gallery.as_view(), name='gallery'),
+    path('gallery/', views.GalleryView.as_view(), name='gallery'),
+    path('add_image/', views.AddImage.as_view(), name='add_image'),
 ]
 
