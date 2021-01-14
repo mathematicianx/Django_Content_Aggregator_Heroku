@@ -1,6 +1,8 @@
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.http import HttpRequest, HttpResponse
+from django.template.loader import render_to_string
 from django.test import TestCase
 from django.urls import resolve, reverse
 from django.utils import timezone
@@ -306,7 +308,6 @@ class ViewRendersCorrectTemplateForPostMethod(TestCase):
         self.assertTrue(html.startswith("\n<!DOCTYPE html>"))
         self.assertIn('<title>Oława</title>', html)
         self.assertTrue(html.endswith('</html>'))
-
 
 class ModelCreatesCorrectly(TestCase):
     def create_news(self, title='Test news', link='http://www.test_link.com', content='content of a news',
