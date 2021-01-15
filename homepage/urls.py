@@ -27,5 +27,5 @@ urlpatterns = [
     path('all_cityhall_news/', views.CityhallNews.as_view(), name='all_cityhall_news'),
     path('gallery/', views.GalleryView.as_view(), name='gallery'),
     path('add_image/', views.AddImage.as_view(), name='add_image'),
+    path('change_active_image/', views.ChangeActiveImage.as_view(), name='change_active_image'),
 ]
-

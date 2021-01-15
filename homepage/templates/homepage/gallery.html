@@ -5,6 +5,32 @@
 
 
 {% block content %}
+
+<script>
+<!--  $function myFunc(image_id) {-->
+<!--    $(".clickable").click(function(){-->
+<!--        $.post(-->
+<!--         url : "change_active_image/",-->
+<!--         dataType:"html",-->
+<!--         success: function(data, status, xhr){-->
+<!--            console.log('test');-->
+<!--            return image_id;-->
+
+<!--        }-->
+<!--        );-->
+<!--        return false;-->
+<!--    });-->
+<!-- });-->
+</script>
+
+<script>
+ const myFunc = function (image_id) {
+    console.log("test");
+    return image_id;
+}
+
+</script>
+
 <div class="container">
     <div class="row">
         <div class="col-12-center">
@@ -18,19 +44,27 @@
             </div>
             <div class="col-12-no-brdr">
                 {% if gallery_images %}
-                    {% for key,value in row_table.items %}
-                        <div class="row-forum">
-                            {% for image in value %}
-                                <div class="col-3">
-                                    <img src="{{ image.thumbnail.url }}" alt="{{ image.title }}">
+                    <div class="row-forum">
+                        <div class="col-12">
+                            <img src="{{ last_image.image.url }}" class="clickable">
+                            {% for short_list in long_table %}
+                                <div class="row-forum">
+                                    {% for image in short_list %}
+                                        <div class="col-3">
+                                            <img src="{{ image.thumbnail.url }}" alt="{{ image.title }}" onclick="myFunc( {{ image.id }} )" class="clickable">
+                                        </div>
+                                    {% endfor %}
                                 </div>
                             {% endfor %}
                         </div>
-                    {% endfor %}
+                    </div>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
+
+
 {% endblock %}
+
 

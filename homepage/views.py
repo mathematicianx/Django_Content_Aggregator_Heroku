@@ -220,27 +220,26 @@ class CityhallNews(View):
 class GalleryView(View):
     def get(self, request):
         gallery_images = Gallery.objects.all()
-        # gallery_images = [1, 2, 3, 4, 6, 7, 8, 9]
-        column_table = [0, 1, 2, 3]
-        row_table = {}
-        small_table = []
-        start = gallery_images[0].id
-        end = start + len(gallery_images)
+        last_image = Gallery.objects.latest('id')
 
-        #TODO change for loop to while loop in case some images were deleted.
+        short_table = []
+        long_table = []
 
-        for i in range(start, end, 4):
-            small_table = []
-            for j in range(0, len(column_table)):
-                try:
-                    small_table.append(Gallery.objects.get(id=i+j))
-                except Gallery.DoesNotExist:
-                    small_table.append(None)
-            row_table[i] = small_table
+        for image in gallery_images:
+            print(image)
+            if len(short_table) < 4 and len(long_table) == 0:
+                short_table.append(image)
+                long_table.append(short_table)
+            elif len(short_table) == 4 and len(long_table[-1]) == 4:
+                long_table.append([image])
+                short_table = [image]
+            elif len(short_table) < 4 and len(long_table[-1]) < 4:
+                short_table.append(image)
+                long_table[-1] = short_table
 
         return render(request, 'homepage/gallery.html', {'gallery_images': gallery_images,
-                                                         'row_table': row_table,
-                                                         'column_table': column_table})
+                                                         'long_table': long_table,
+                                                         'last_image': last_image})
 
 class AddImage(View):
     @method_decorator(login_required)
