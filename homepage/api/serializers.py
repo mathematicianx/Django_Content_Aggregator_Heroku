@@ -27,7 +27,7 @@ class SimpleAdSerializer(serializers.ModelSerializer):
         validators = [ UniqueForYearValidator(
             queryset=SimpleAd.objects.all(),
             field='slug',
-            date_field='date_of_publication'),
+            date_field='date_of_publication'),]
 
 
     class Meta:
