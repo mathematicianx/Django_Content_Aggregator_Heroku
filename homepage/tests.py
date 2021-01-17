@@ -1,13 +1,11 @@
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.http import HttpRequest, HttpResponse
-from django.template.loader import render_to_string
-
 from django.test import TestCase
 from django.urls import resolve, reverse
 from django.utils import timezone
-from homepage.models import SimpleAd, ForumTopic, News, Movie, MovieSpectacles, Profile
+from django.utils.text import slugify
+from homepage.models import SimpleAd, ForumTopic, News, Movie, MovieSpectacles, Profile, ForumResponse
 from homepage.views import IndexClassView, ShowAds, Register, NewAd, Edit, ForumView, CreateTopic, PostDetail,\
                            LocalNews, CityhallNews, AdDetail, Gallery
 import os
@@ -99,7 +97,7 @@ class UrlResolveCorrectViewTest(TestCase):
 
     def test_ad_detail_url_resolves_AdDetail_as_view(self):
         self.user = User.objects.create_user(username='test_user1', password='test_user1')
-        ad = SimpleAd.objects.create(title='test ad', slug='test-ad', body='test body',
+        ad = SimpleAd.objects.create(title='test ad', slug=slugify('test ad'), body='test body',
                                      date_of_publication=timezone.now().replace(second=0, microsecond=0),
                                      price=250, author=self.user)
 
@@ -124,9 +122,7 @@ class UrlResolveCorrectViewTest(TestCase):
         self.assertEqual(found.func.__module__, PostDetail.as_view().__module__)
 
 
-
-
-class ViewRendersCorrectHTMLTemplate(TestCase):
+class ViewRendersCorrectHTMLTemplateForGetMethod(TestCase):
     def test_IndexClassView_returns_correct_template(self):
         response = self.client.get('')
         html = response.content.decode('utf8')
@@ -143,7 +139,7 @@ class ViewRendersCorrectHTMLTemplate(TestCase):
 
     def test_AdDetail_returns_correct_template(self):
         self.user = User.objects.create_user(username='test_user1', password='test_user1')
-        ad = SimpleAd.objects.create(title='test ad', slug='test-ad', body='test body',
+        ad = SimpleAd.objects.create(title='test ad', slug=slugify('test ad'), body='test body',
                                      date_of_publication=timezone.now().replace(second=0, microsecond=0),
                                      price=250, author=self.user)
         year = ad.date_of_publication.year
@@ -206,7 +202,7 @@ class ViewRendersCorrectHTMLTemplate(TestCase):
         self.user = User.objects.create_user(username='test_user1', password='test_user1')
         self.client.login(username='test_user1', password='test_user1')
         topic = ForumTopic.objects.create(author=self.user, title='test title', body='test body',
-                                          date_of_publication=timezone.now(), slug='test-title')
+                                          date_of_publication=timezone.now(), slug=slugify('test title'))
         response = self.client.get('/' + str(topic.id) + '/' + topic.slug + '/')
         html = response.content.decode('utf8')
         self.assertTrue(html.startswith("\n<!DOCTYPE html>"))
@@ -226,6 +222,25 @@ class ViewRendersCorrectHTMLTemplate(TestCase):
         self.assertTrue(html.startswith("\n<!DOCTYPE html>"))
         self.assertIn('<title>Lokalne wiadomości</title>', html)
         self.assertTrue(html.endswith('</html>'))
+
+    # TODO: finish this this test after gallery is finished
+    # def not_test_Gallery_returns_correct_template(self):
+    #     response = self.client.get('/gallery/')
+    #     html = response.content.decode('utf8')
+    #     self.assertTrue(html.startswith("\n<!DOCTYPE html>"))
+    #     self.assertIn('<title>Galeria</title>', html)
+    #     self.assertTrue(html.endswith('</html>'))
+
+class ViewRendersCorrectTemplateForPostMethod(TestCase):
+    def test_Register_post_method(self):
+        response = self.client.post('/register/', data={'username': 'test_user2', 'first_name': 'imie testera',
+                                                        'email': 'tester@testowytester.com', 'password': 'test_user2',
+                                                        'password2': 'test_user2'})
+        html = response.content.decode('utf8')
+        self.assertTrue(html.startswith("\n<!DOCTYPE html>"))
+        self.assertIn('<title>Witaj</title>', html)
+        self.assertTrue(html.endswith('</html>'))
+
 
 
 class ModelCreatesCorrectly(TestCase):
@@ -269,7 +284,7 @@ class ModelCreatesCorrectly(TestCase):
 
 
 
-    def create_SimpleAd_with_photo(self, title='test ad', slug='test-ad', body='test body',
+    def create_SimpleAd_with_photo(self, title='test ad', slug=slugify('testad'), body='test body',
                                    date_of_publication=timezone.now().replace(second=0, microsecond=0), price=250):
         file_path = os.path.join(BASE_DIR, 'homepage\static\images\default.png')
         self.user = User.objects.create_user(username='test_user1', password='test_user1')
@@ -298,3 +313,51 @@ class ModelCreatesCorrectly(TestCase):
         self.assertEqual(ad.image.name, 'test_image.jpg')
         self.assertEqual(ad.get_absolute_url(), f'/{year}/{month}/{day}/{ad.slug}/'.format(year, month, day, ad.slug))
 
+    def test_Profile_creation(self):
+        user1 = User.objects.create_user(username='test_user1', password='test_user1')
+        profile = Profile.objects.create(user=user1,
+                                         date_of_birth=timezone.now().replace(hour=0, minute=0, second=0,
+                                                                              microsecond=0))
+        file_path = os.path.join(BASE_DIR, 'homepage\static\images\photo_test_profile.png')
+        profile.photo = SimpleUploadedFile(name='profile_test_image.png', content=open(file_path, 'rb').read())
+        self.assertTrue(isinstance(profile, Profile))
+        self.assertEqual(profile.user.username, 'test_user1')
+        self.assertEqual(profile.date_of_birth, timezone.now().replace(hour=0, minute=0, second=0,
+                                                                       microsecond=0))
+        self.assertEqual(profile.photo.name, 'profile_test_image.png')
+        self.assertEqual(profile.__str__(), 'Profil użytkownika {}.'.format(user1.username))
+
+
+    def test_ForumTopic_creation(self):
+        user1 = User.objects.create_user(username='test_user1', password='test_user1')
+        topic = ForumTopic.objects.create(author=user1, title='tytul tematu', body='tresc tematu',
+                                          date_of_publication=timezone.now().replace(hour=0,minute=0, second=0, microsecond=0),
+                                          slug=slugify('tytul tematu'))
+        self.assertTrue(isinstance(topic, ForumTopic))
+        self.assertEqual(topic.author, user1)
+        self.assertEqual(topic.title, 'tytul tematu')
+        self.assertEqual(topic.body, 'tresc tematu')
+        self.assertEqual(topic.slug, slugify('tytul tematu'))
+        self.assertEqual(topic.get_absolute_url(), '/1/tytul-tematu/')
+        self.assertEqual(topic.topic_count, 1)
+        self.assertEqual(topic.last_post_date.replace(minute=0, second=0, microsecond=0),
+                         timezone.now().replace(minute=0, second=0, microsecond=0))
+        self.assertEqual(topic.__str__(), 'tytul tematu')
+
+    def test_ForumResponse_creation(self):
+        user1 = User.objects.create_user(username='test_user1', password='test_user1')
+        topic = ForumTopic.objects.create(author=user1, title='tytul tematu', body='tresc tematu',
+                                          date_of_publication=timezone.now().replace(hour=0, minute=0, second=0,
+                                                                                     microsecond=0),
+                                          slug=slugify('tytul tematu'))
+        forum_response = ForumResponse.objects.create(author=user1, body='tresc posta',
+                                                      date_of_publication=timezone.now().replace(minute=0,
+                                                                                                 second=0,
+                                                                                                 microsecond=0),
+                                                      topic=topic)
+
+        self.assertTrue(isinstance(forum_response, ForumResponse))
+        self.assertEqual(forum_response.body, 'tresc posta')
+        self.assertEqual(forum_response.date_of_publication.replace(minute=0, second=0, microsecond=0), timezone.now().replace(minute=0, second=0, microsecond=0))
+        self.assertEqual(forum_response.topic.title, 'tytul tematu')
+        self.assertEqual(forum_response.__str__(), "Dodano post dla tematu {}".format(topic))
