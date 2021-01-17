@@ -8,6 +8,7 @@ from django.utils.text import slugify
 from homepage.models import SimpleAd, ForumTopic, News, Movie, MovieSpectacles, Profile, ForumResponse
 from homepage.views import IndexClassView, ShowAds, Register, NewAd, Edit, ForumView, CreateTopic, PostDetail,\
                            LocalNews, CityhallNews, AdDetail, Gallery
+from homepage.custom_webscraper import olawa24_scraper, tuolawa_scraper, kino_odra_scraper, go_kino_scraper, um_olawa_scraper
 import os
 from mysite.settings import BASE_DIR
 
@@ -209,6 +210,7 @@ class ViewRendersCorrectHTMLTemplateForGetMethod(TestCase):
         self.assertIn('<title>' + topic.title +'</title>', html)
         self.assertTrue(html.endswith('</html>'))
 
+
     def test_AllCityhallNews_returns_correct_template(self):
         response = self.client.get('/all_cityhall_news/')
         html = response.content.decode('utf8')
@@ -241,6 +243,69 @@ class ViewRendersCorrectTemplateForPostMethod(TestCase):
         self.assertIn('<title>Witaj</title>', html)
         self.assertTrue(html.endswith('</html>'))
 
+    def test_NewAd_post_method(self):
+        self.user = User.objects.create_user(username='test_user1', password='test_user1')
+        self.client.login(username='test_user1', password='test_user1')
+        response = self.client.post('/new_ad/', data={'title': 'test ogloszenia',
+                                                      'body': 'tresc ogloszenia',
+                                                      'date_of_publication': timezone.now().replace(second=0,
+                                                                                                    microsecond=0),
+                                                      'slug': slugify('test ogloszenia'), 'price': 250},
+                                    follow=True)
+        html = response.content.decode('utf8')
+        self.assertTrue(html.startswith("\n<!DOCTYPE html>"))
+        self.assertIn('<title>Aktualne ogłoszenia</title>', html)
+        self.assertTrue(html.endswith('</html>'))
+
+    def test_CreateTopic_post_method(self):
+        self.user = User.objects.create_user(username='test_user1', password='test_user1')
+        self.client.login(username='test_user1', password='test_user1')
+        response = self.client.post('/create_topic/',
+                                    data={'title': 'nazwa tematu',
+                                    'body': 'tresc tematu',
+                                    'date_of_publication': timezone.now().replace(second=0, microsecond=0),
+                                    'slug': slugify('nazwa tematu')},
+                                    follow=True)
+        html = response.content.decode('utf8')
+        self.assertTrue(html.startswith("\n<!DOCTYPE html>"))
+        self.assertIn('<title>Forum dyskusyjne</title>', html)
+        self.assertTrue(html.endswith('</html>'))
+
+    def test_PostDetail_post_method(self):
+        self.user = User.objects.create_user(username='test_user1', password='test_user1')
+        self.client.login(username='test_user1', password='test_user1')
+        topic = ForumTopic.objects.create(author=self.user,
+                                          title='tytul tematu',
+                                          body='tresc tematu',
+                                          date_of_publication=timezone.now().replace(hour=0,
+                                                                                     minute=0,
+                                                                                     second=0,
+                                                                                     microsecond=0),
+                                          slug=slugify('tytul tematu'))
+
+        response = self.client.post(f'/{topic.id}/{topic.slug}/'.format(topic.id, topic.slug),
+                                    data={'body': 'tresc posta',
+                                    'date_of_publication': timezone.now().replace(second=0, microsecond=0),
+                                    'topic': topic})
+        html = response.content.decode('utf8')
+        self.assertTrue(html.startswith("\n<!DOCTYPE html>"))
+        self.assertIn('<title>tytul tematu</title>', html)
+        self.assertTrue(html.endswith('</html>'))
+
+
+    def test_Edit_post_method(self):
+        self.user = User.objects.create_user(username='test_user1', password='test_user1')
+        profile = Profile.objects.create(user=self.user,
+                                         date_of_birth=timezone.now().replace(hour=0,
+                                                                              minute=0,
+                                                                              second=0,
+                                                                              microsecond=0))
+        self.client.login(username='test_user1', password='test_user1')
+        response = self.client.post('/edit/', data={'date_of_birth': timezone.now()}, follow=True)
+        html = response.content.decode('utf8')
+        self.assertTrue(html.startswith("\n<!DOCTYPE html>"))
+        self.assertIn('<title>Oława</title>', html)
+        self.assertTrue(html.endswith('</html>'))
 
 
 class ModelCreatesCorrectly(TestCase):
@@ -361,3 +426,19 @@ class ModelCreatesCorrectly(TestCase):
         self.assertEqual(forum_response.date_of_publication.replace(minute=0, second=0, microsecond=0), timezone.now().replace(minute=0, second=0, microsecond=0))
         self.assertEqual(forum_response.topic.title, 'tytul tematu')
         self.assertEqual(forum_response.__str__(), "Dodano post dla tematu {}".format(topic))
+
+class Webscraper(TestCase):
+
+    # this test works, but it is disabled to not cause unnecesary traffic on scraped webpages
+    def not_test_ScraperFunction_returns_dictionary(self):
+        olawa24_return_value = olawa24_scraper()
+        tuolawa_return_value = tuolawa_scraper()
+        kino_odra_return_value = kino_odra_scraper()
+        go_kino_value = go_kino_scraper()
+        um_olawa_value = um_olawa_scraper()
+        self.assertTrue(isinstance(olawa24_return_value, dict))
+        self.assertTrue(isinstance(tuolawa_return_value, dict))
+        self.assertTrue(isinstance(kino_odra_return_value, dict))
+        self.assertTrue(isinstance(go_kino_value, dict))
+        self.assertTrue(isinstance(um_olawa_value, dict))
+
