@@ -17,4 +17,4 @@ Using forum and ads is free, but login is required.
 * TinyMCE for better input in forms,
 * FilmwebAPI written by lopezloo for movie score,
 * thumbnail-SORL for handling images and scaling them for forum avatars and advert miniatures,
-* REST api for accessing data from scraped news and inputing/updating/deleting new data from JSON file for authorized users (GET/POST/UPDATE/DELETE)
+* REST api for accessing data from scraped news and inputing/updating/deleting new data from JSON file for authorized users (GET/POST/UPDATE/DELETE) (http://olawa-agregator.herokuapp/api/news/)
