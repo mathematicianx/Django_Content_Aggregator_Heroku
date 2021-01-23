@@ -241,7 +241,3 @@ class Gallery(models.Model):
 
     def __str__(self):
         return self.title
-<<<<<<< HEAD
-
-=======
->>>>>>> f9b9be7646ad2c0ac3a25577477273c86055e737
