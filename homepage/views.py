@@ -226,7 +226,7 @@ class GalleryView(View):
             last_image = ''
         short_table = []
         long_table = []
-        if gallery_images:
+        try:
             for image in gallery_images:
                 print(image)
                 if len(short_table) < 4 and len(long_table) == 0:
@@ -238,6 +238,8 @@ class GalleryView(View):
                 elif len(short_table) < 4 and len(long_table[-1]) < 4:
                     short_table.append(image)
                     long_table[-1] = short_table
+        except: # this is bad but is is just a temporary solution
+            print('test')
 
         return render(request, 'homepage/gallery.html', {'gallery_images': gallery_images,
                                                          'long_table': long_table,
