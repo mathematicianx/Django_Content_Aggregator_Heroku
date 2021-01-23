@@ -222,7 +222,7 @@ class GalleryView(View):
         gallery_images = Gallery.objects.all()
         try:
             last_image = Gallery.objects.latest('id')
-        except AttributeError: # this is bad but is is just a temporary solution
+        except: # this is bad but is is just a temporary solution
             last_image = ''
         short_table = []
         long_table = []
