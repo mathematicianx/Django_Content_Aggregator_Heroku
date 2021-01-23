@@ -219,7 +219,10 @@ class CityhallNews(View):
 
 class GalleryView(View):
     def get(self, request):
+        try:
         gallery_images = Gallery.objects.all()
+        except: # this is bad but is is just a temporary solution
+            gallery_images = ''
         try:
             last_image = Gallery.objects.latest('id')
         except: # this is bad but is is just a temporary solution
