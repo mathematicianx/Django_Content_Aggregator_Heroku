@@ -5,6 +5,10 @@
 "*.log"
 "*.sqlite3"
 "/homepage/migrations"
+<<<<<<< HEAD
 "homepage/api/__pycache__"
 
 
+=======
+"/homepage/api/__pycache__"
+>>>>>>> f9b9be7646ad2c0ac3a25577477273c86055e737

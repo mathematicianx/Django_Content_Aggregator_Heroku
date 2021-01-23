@@ -113,5 +113,23 @@ class CreateSimpleAdView(APIView):
         else:
             print(serializer.errors)
 
+<<<<<<< HEAD
 
+=======
+    # def perform_create(self, request serializer):
+    #     serializer = SimpleAdSerializer(data=request.data)
+    #     serializer.save(author=self.request.user)
+
+        return Response(serializer.data)
+
+    def post(self, request):
+        user = request.user
+        serializer = SimpleAdSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(author=self.request.user)
+        return Response(serializer.data)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+>>>>>>> f9b9be7646ad2c0ac3a25577477273c86055e737
 

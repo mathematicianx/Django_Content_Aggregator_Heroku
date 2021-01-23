@@ -20,6 +20,7 @@ class NewsSerializer(serializers.ModelSerializer):
 
 
 class SimpleAdSerializer(serializers.ModelSerializer):
+<<<<<<< HEAD
     date_of_publication = serializers.DateTimeField()
     class Meta:
 
@@ -34,3 +35,45 @@ class SimpleAdSerializer(serializers.ModelSerializer):
 
 
 
+=======
+
+    date_of_publication = datetime.now()
+    class Meta:
+
+        model = SimpleAd
+        fields = ('title', 'body', 'price', 'author', 'slug', 'date_of_publication',)
+        validators = [ UniqueForYearValidator(
+            queryset=SimpleAd.objects.all(),
+            field='slug',
+            date_field='date_of_publication'),]
+
+
+    # class Meta:
+    #     model = SimpleAd
+    #     fields = ('title', 'body', 'price', 'author')
+    #     validators = [ UniqueForYearValidator(
+    #         queryset=SimpleAd.objects.all(),
+    #         field='slug',
+    #         date_field='date_of_publication'),
+    #     ]
+
+
+
+
+# class UserSerializer(serializers.ModelSerializer):
+#     user_ads = serializers.PrimaryKeyRelatedField(many=True, queryset=SimpleAd.objects.all())
+#
+#     class Meta:
+#         model = User
+#         fields = ['id', 'username', 'user_ads']
+
+        # model = SimpleAd
+
+class UserSerializer(serializers.ModelSerializer):
+    user_ads = serializers.PrimaryKeyRelatedField(many=True, queryset=SimpleAd.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'user_ads']
+
+>>>>>>> f9b9be7646ad2c0ac3a25577477273c86055e737

@@ -237,6 +237,12 @@ class GalleryView(View):
                 short_table.append(image)
                 long_table[-1] = short_table
 
+<<<<<<< HEAD
+=======
+
+
+        print(last_image.image.url)
+>>>>>>> f9b9be7646ad2c0ac3a25577477273c86055e737
         return render(request, 'homepage/gallery.html', {'gallery_images': gallery_images,
                                                          'long_table': long_table,
                                                          'last_image': last_image})
@@ -256,3 +262,14 @@ class AddImage(View):
     def get(self, request):
         new_image_form = AddImageToGalleryForm(user=request.user)
         return render(request, 'homepage/add_image.html', {'new_image_form': new_image_form})
+<<<<<<< HEAD
+=======
+
+class ChangeActiveImage(View):
+    def post(self, request):
+        id = request.POST.id
+        print(id)
+        image_id = request.POST.get('id')
+        full_image = Gallery.objects.get(id=image_id)
+        return render(request, 'homepage/gallery.html', {'full_image': full_image})
+>>>>>>> f9b9be7646ad2c0ac3a25577477273c86055e737
