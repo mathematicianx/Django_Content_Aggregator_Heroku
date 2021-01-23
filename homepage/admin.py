@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import News, Movie, SimpleAd, Profile, ForumTopic, ForumResponse
+from .models import News, Movie, SimpleAd, Profile, ForumTopic, ForumResponse, Gallery
 # Register your models here.
 
 
@@ -32,3 +32,8 @@ class TopicAdmin(admin.ModelAdmin):
 @admin.register(ForumResponse)
 class ResponseAdmin(admin.ModelAdmin):
     list_display = ('author', 'body', 'topic')
+
+
+@admin.register(Gallery)
+class GalleryAdmin(admin.ModelAdmin):
+    list_display = ('author', 'title', 'image',)

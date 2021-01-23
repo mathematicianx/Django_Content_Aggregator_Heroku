@@ -224,7 +224,7 @@ class Gallery(models.Model):
                                related_name='user_images')
     date_of_publication = models.DateTimeField(auto_now_add=True)
     image = ThumbnailImageField(upload_to='uploads/',
-                                blank=True)
+                                blank=False)
     slug = models.SlugField(max_length=250,
                             unique_for_date='date_of_publication')
 
@@ -232,6 +232,11 @@ class Gallery(models.Model):
     def thumbnail(self):
         if self.image:
             return get_thumbnail(self.image, '200x200', quality=90)
+
+    @property
+    def resized_photo(self):
+        if self.image:
+            return get_thumbnail(self.image, '500x500', quality=90)
 
 
     def __str__(self):

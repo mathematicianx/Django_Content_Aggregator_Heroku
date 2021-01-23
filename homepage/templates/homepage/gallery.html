@@ -5,12 +5,7 @@
 
 
 {% block content %}
-<script>
-const myFunc = function (image_id) {
-    console.log("test");
-    return image_id;
-}
-</script>
+
 
 <div class="container">
     <div class="row">
@@ -27,12 +22,13 @@ const myFunc = function (image_id) {
                 {% if gallery_images %}
                     <div class="row-forum">
                         <div class="col-12">
-                            <img src="{{ last_image.image.url }}" class="clickable">
+                            <img src="{{ last_image.resized_photo.url }}" class="active-image">
                             {% for short_list in long_table %}
                                 <div class="row-forum">
                                     {% for image in short_list %}
                                         <div class="col-3">
-                                            <img src="{{ image.thumbnail.url }}" alt="{{ image.title }}" onclick="myFunc( {{ image.id }} )" class="clickable">
+                                            <img src="{{ image.thumbnail.url }}" alt="{{ image.title }}"
+                                                 data-my-custom-data="{{ image.resized_photo.url }}"  class="clickable">
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -46,6 +42,32 @@ const myFunc = function (image_id) {
 </div>
 
 
+<script>
+function listen() {
+const images = document.querySelectorAll("img.clickable");
+images.forEach(photo => {
+    photo.addEventListener("click", () => {
+    let active_photo = document.querySelector("img.active-image");
+    console.log(photo.dataset.myCustomData)
+    active_photo.src = photo.dataset.myCustomData;})
+})
+}
+
+listen()
+</script>
+
 {% endblock %}
 
 
+
+
+
+<!--btn.addEventListener("click", () => {-->
+<!--    document.querySelector(".test-cnt").innerHTML = `-->
+<!--        <div class="module">-->
+<!--            <p>To jest <strong>dynamicznie wstawiony html</strong>:</p>-->
+<!--            <button class="button">Klik!</button>-->
+<!--            <button class="button">Inny klik!</button>-->
+<!--        </div>-->
+<!--    `;-->
+<!--});-->
