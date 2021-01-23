@@ -220,8 +220,10 @@ class CityhallNews(View):
 class GalleryView(View):
     def get(self, request):
         gallery_images = Gallery.objects.all()
-        last_image = Gallery.objects.latest('id')
-
+        try:
+            last_image = Gallery.objects.latest('id')
+        except AttributeError:
+            last_image = ''
         short_table = []
         long_table = []
 
