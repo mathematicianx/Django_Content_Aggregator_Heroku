@@ -222,22 +222,22 @@ class GalleryView(View):
         gallery_images = Gallery.objects.all()
         try:
             last_image = Gallery.objects.latest('id')
-        except AttributeError:
+        except AttributeError: # this is bad but is is just a temporary solution
             last_image = ''
         short_table = []
         long_table = []
-
-        for image in gallery_images:
-            print(image)
-            if len(short_table) < 4 and len(long_table) == 0:
-                short_table.append(image)
-                long_table.append(short_table)
-            elif len(short_table) == 4 and len(long_table[-1]) == 4:
-                long_table.append([image])
-                short_table = [image]
-            elif len(short_table) < 4 and len(long_table[-1]) < 4:
-                short_table.append(image)
-                long_table[-1] = short_table
+        if gallery_images:
+            for image in gallery_images:
+                print(image)
+                if len(short_table) < 4 and len(long_table) == 0:
+                    short_table.append(image)
+                    long_table.append(short_table)
+                elif len(short_table) == 4 and len(long_table[-1]) == 4:
+                    long_table.append([image])
+                    short_table = [image]
+                elif len(short_table) < 4 and len(long_table[-1]) < 4:
+                    short_table.append(image)
+                    long_table[-1] = short_table
 
         return render(request, 'homepage/gallery.html', {'gallery_images': gallery_images,
                                                          'long_table': long_table,
