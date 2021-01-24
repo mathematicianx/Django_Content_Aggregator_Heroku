@@ -22,14 +22,14 @@
                 {% if gallery_images %}
                     <div class="row-forum">
                         <div class="col-12">
-                            <img src="{{ last_image.resized_photo.url }}" class="active-image">
+                            <img src="{{ last_image.resized_photo.url }}" class="active-image" style="max-width: 100%">
                             <p class="active-description">{{ last_image.title }}</p>
                             {% for short_list in long_table %}
                                 <div class="row-forum">
                                     {% for image in short_list %}
                                         <div class="col-3">
                                             <img src="{{ image.thumbnail.url }}" alt="{{ image.title }}"
-                                                 data-my-custom-data="{{ image.resized_photo.url }}"  class="clickable">
+                                                 data-my-custom-data="{{ image.resized_photo.url }}"  class="clickable" style="max-width: 100%">
                                         </div>
                                     {% endfor %}
                                 </div>

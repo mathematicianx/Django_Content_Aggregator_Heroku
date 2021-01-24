@@ -22,9 +22,9 @@
                     <p>{{ post_topic.author }}</p>
                     <p>
                     {% if post_topic.author.profile.thumbnail %}
-                        <img src="{{ post_topic.author.profile.thumbnail.url }}">
+                        <img src="{{ post_topic.author.profile.thumbnail.url }}" style="max-width: 100%">
                     {% else %}
-                        <img src="{% static "images/default.png" %}">
+                        <img src="{% static "images/default.png" %}" style="max-width: 100%">
                     {% endif %}
                     </p>
                     <p>Liczba postów: {{ post_topic.author.profile.post_count }}</p>
@@ -42,9 +42,9 @@
                             <p>{{ post_r.author }}</p>
                             <p>
                             {% if post_r.author.profile.thumbnail %}
-                                <img src="{{ post_r.author.profile.thumbnail.url }}">
+                                <img src="{{ post_r.author.profile.thumbnail.url }}" style="max-width: 100%">
                             {% else %}
-                                <img src="{% static "images/default.png" %}">
+                                <img src="{% static "images/default.png" %}" style="max-width: 100%">
                             {% endif %}
                             <p>Liczba postów: {{ post_r.author.profile.post_count }}</p>
                         </div>

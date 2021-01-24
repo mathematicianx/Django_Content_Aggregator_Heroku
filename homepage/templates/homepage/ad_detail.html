@@ -22,7 +22,7 @@
                     <div>{{ ad.body|safe }} <!----------------SAFETY ISSUE ----------------------------------------></div>
                     <div class="col-12-center">
                         {% if ad.image %}
-                        <img src="{{ ad.resized_photo.url }}">
+                        <img src="{{ ad.resized_photo.url }}" style="max-width: 100%">
                         {% endif %}
                     </div>
                 </div>

@@ -16,9 +16,9 @@
                 <div class="row">
                     <div class="col-3-foto-center">
                         {% if ad.image %}
-                            <img src="{{ ad.thumbnail.url }}">
+                            <img src="{{ ad.thumbnail.url }}" style="max-width: 100%">
                         {% else %}
-                            <img src="{% static "images/default.png" %}">
+                            <img src="{% static "images/default.png" %}" style="max-width: 100%">
                         {% endif %}
                     </div>
                     <div class="col-9">
