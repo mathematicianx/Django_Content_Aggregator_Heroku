@@ -18,3 +18,4 @@ Using forum and ads is free, but login is required.
 * FilmwebAPI written by lopezloo for movie score,
 * thumbnail-SORL for handling images and scaling them for forum avatars and advert miniatures,
 * REST api for accessing data from scraped news for everyone and inputing/updating/deleting data for authorized users (http://olawa-agregator.herokuapp.com/api/news/)
+* Gallery prototype with simple JS script to refresh active images on click
