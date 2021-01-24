@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.decorators import method_decorator
 from .models import News, Movie, MovieSpectacles, SimpleAd, Profile, ForumTopic, ForumResponse, User, Gallery
 from .forms import SimpleAdForm, LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm, CreateTopicForm, CreateResponseForm, AddImageToGalleryForm
@@ -214,8 +215,17 @@ class LocalNews(View):
 
 class CityhallNews(View):
     def get(self, request):
-        umolawa_news = News.umolawa_manager.order_by('-date_of_publication')
-        return render(request, 'homepage/all_cityhall_news.html', {'umolawa_news': umolawa_news})
+        object_news = News.umolawa_manager.order_by('-date_of_publication')
+        paginator = Paginator(object_news, 10)
+        page = request.GET.get('page')
+        try:
+            umolawa_news = paginator.page(page)
+        except PageNotAnInteger:
+            umolawa_news = paginator.page(1)
+        except EmptyPage:
+            umolawa_news = paginator.page(paginator.num_pages)
+        return render(request, 'homepage/all_cityhall_news.html', {'umolawa_news': umolawa_news,
+                                                                   'page': page})
 
 class GalleryView(View):
     def get(self, request):

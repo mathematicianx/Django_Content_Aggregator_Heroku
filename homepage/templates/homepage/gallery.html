@@ -23,6 +23,7 @@
                     <div class="row-forum">
                         <div class="col-12">
                             <img src="{{ last_image.resized_photo.url }}" class="active-image">
+                            <p class="active-description">{{ last_image.title }}</p>
                             {% for short_list in long_table %}
                                 <div class="row-forum">
                                     {% for image in short_list %}
@@ -47,9 +48,11 @@ function listen() {
 const images = document.querySelectorAll("img.clickable");
 images.forEach(photo => {
     photo.addEventListener("click", () => {
-    let active_photo = document.querySelector("img.active-image");
-    console.log(photo.dataset.myCustomData)
-    active_photo.src = photo.dataset.myCustomData;})
+    let active_photo_source = document.querySelector("img.active-image");
+    active_photo_source.src = photo.dataset.myCustomData;
+    let active_photo_description = document.querySelector("p.active-description");
+    active_photo_description.innerText = photo.alt;
+    })
 })
 }
 
@@ -57,17 +60,3 @@ listen()
 </script>
 
 {% endblock %}
-
-
-
-
-
-<!--btn.addEventListener("click", () => {-->
-<!--    document.querySelector(".test-cnt").innerHTML = `-->
-<!--        <div class="module">-->
-<!--            <p>To jest <strong>dynamicznie wstawiony html</strong>:</p>-->
-<!--            <button class="button">Klik!</button>-->
-<!--            <button class="button">Inny klik!</button>-->
-<!--        </div>-->
-<!--    `;-->
-<!--});-->
