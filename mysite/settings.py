@@ -17,15 +17,10 @@ import django_heroku
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '_i$ip&z&@z7x85wx_rtus@p&paepa0_+_=sl1na0_s^ig)p((f'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['olawa-agregator.herokuapp.com', '127.0.0.1']
 
@@ -137,7 +132,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 LOGIN_REDIRECT_URL = 'homepage:forum'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
-THUMBNAIL_DEBUG = True
+THUMBNAIL_DEBUG = False
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
