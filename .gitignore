@@ -6,6 +6,6 @@
 "*.sqlite3"
 "/homepage/migrations"
 "homepage/api/__pycache__"
-"homepage/test/__pycache__"
+"homepage/tests/__pycache__"
 
 

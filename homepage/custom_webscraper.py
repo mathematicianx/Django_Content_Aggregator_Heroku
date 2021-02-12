@@ -136,7 +136,10 @@ def kino_odra_scraper():
         duration = result.find('span', class_='movie-time').text.lstrip().rstrip('\'')
         tmp_time_of_spctcl = result.find_all('span', class_='movie-hour')
         fw = Filmweb()
-        filmweb_score = fw.search(title)[0].get_info()['rate']
+        try:
+            filmweb_score = fw.search(title)[0].get_info()['rate']
+        except ValueError:
+            filmweb_score = 0
         for one_tmp_time in tmp_time_of_spctcl:
             hours = int(one_tmp_time.text[:2])
             minutes = int(one_tmp_time.text[3:])
@@ -197,7 +200,10 @@ def go_kino_scraper():
         spectacles = second_container.find_all('div', class_='col-md-3 ng-scope')
         time_of_spectacles = []
         fw = Filmweb()
-        filmweb_score = fw.search(title)[0].get_info()['rate']
+        try:
+            filmweb_score = fw.search(title)[0].get_info()['rate']
+        except ValueError:
+            filmweb_score = 0
         for spec in spectacles:
             hours = int(spec.text.lstrip('\n').rstrip()[:2])
             minutes = int(spec.text.lstrip('\n').rstrip()[3:])
@@ -243,3 +249,5 @@ def um_olawa_scraper():
                                         'link': link,
                                         'published_date': published_date}
     return returned_dict
+
+kino_odra_scraper()
